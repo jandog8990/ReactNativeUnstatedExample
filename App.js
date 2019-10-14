@@ -8,6 +8,8 @@
 
 import React, { Component } from 'react';
 import {
+  FlatList,
+  ActivityIndicator, 
   SafeAreaView,
   StyleSheet,
   ScrollView,
@@ -27,13 +29,83 @@ import {
 
 //const App: () => React$Node = () => {
 export default class UnstatedApp extends Component {
+  
+  // Constructor props and state init
+  constructor(props) {
+    super(props);
+	this.state = { isLoading: true }
+  }
+
+  fetchJSONAsync = async(url) => {
+	try {	
+		const response = await fetch(url);
+		const responseJson = await response.json();
+		console.log("Response Json:");
+		console.log(responseJson);
+		console.log("\n");
+			
+		this.setState({
+		  isLoading: false,
+		  dataSource: responseJson.movies
+		});
+	} catch(err) {
+	    console.error(err);
+	}
+  }
+
+  // Component did mount -> fetch network
+  componentDidMount() {
+    let url = 'https://facebook.github.io/react-native/movies.json';
+	this.fetchJSONAsync(url);
+  }
+
   render() {
 	  let pic = {
         uri: 'https://upload.wikimedia.org/wikipedia/commons/d/de/Bananavarieties.jpg'
       }; 
+	  
+	  if (this.state.isLoading) {
+	    return(
+		  <View style={{flex: 1, paddingTop: 20}}>
+            <ActivityIndicator/>
+          </View> 
+		)
+	  }
+
 	  return (
-		<>
-		  <StatusBar barStyle="dark-content" />
+		<View style={{alignItems: 'center', top: 50}}>
+		<View style={styles.sectionContainer}>
+		  <FlatList
+			data={this.state.dataSource}
+			renderItem={({item}) => <Text>{item.title}, {item.releaseYear}</Text>}
+			keyExtractor={({id}, index) => id}
+		  />
+		</View>
+		</View>
+	  );
+  }
+}
+
+	
+	/*
+	return fetch('https://facebook.github.io/react-native/movies.json')
+	  .then((response) => response.json())
+	  .then((responseJson) => {
+	    console.log("Response json = ");
+		console.log(responseJson);
+
+	    this.setState({
+	  	  isLoading: false,
+	      dataSource: responseJson.movies
+		}, function() {
+		});
+ 
+ 	  }).catch((err) => {
+	    console.error(err);
+	  });
+ 	*/ 
+
+/*
 		  <SafeAreaView>
 			<ScrollView
 			  contentInsetAdjustmentBehavior="automatic"
@@ -45,17 +117,6 @@ export default class UnstatedApp extends Component {
 				</View>
 			  )}
 			  <View style={{alignItems: 'center', top: 50}}>
-				<View>
-				  <Blink text='I love to blink' />
-				  <Blink text='Yes blinking is so great' />
-				  <Blink text='Why did they ever take this out of HTML' />
-				  <Blink text='Look at me look at me look at me' />
-      			</View>	
-				<View style={{alignItems: 'center', top: 50}}>
-				  <Greeting name='Rexxar' />
-				  <Greeting name='Jaina' />
-				  <Greeting name='Valeera' />
-				</View>
 				<View style={styles.sectionContainer}>
 				  <Text style={styles.sectionTitle}>Step One</Text>
 				  <Text style={styles.sectionDescription}>
@@ -85,11 +146,9 @@ export default class UnstatedApp extends Component {
 			  </View>
 			</ScrollView>
 		  </SafeAreaView>
-		</>
-	  );
-  }
-}
+*/
 
+/*
 class Blink extends Component {
 
   componentDidMount(){
@@ -114,7 +173,9 @@ class Blink extends Component {
     );
   }
 }
+*/
 
+/*
 class Greeting extends Component {
   render() {
     return (
@@ -124,6 +185,7 @@ class Greeting extends Component {
     );
   }
 }
+*/
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -165,3 +227,18 @@ const styles = StyleSheet.create({
 });
 
 //export default App;
+/*
+<View style={{alignItems: 'center', top: 50}}>
+  <Greeting name='Rexxar' />
+  <Greeting name='Jaina' />
+  <Greeting name='Valeera' />
+</View>
+*/	
+/*	
+<View>
+  <Blink text='I love to blink' />
+  <Blink text='Yes blinking is so great' />
+  <Blink text='Why did they ever take this out of HTML' />
+  <Blink text='Look at me look at me look at me' />
+</View>	
+*/	

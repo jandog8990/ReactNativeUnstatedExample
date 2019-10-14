@@ -34,6 +34,7 @@ local.properties
 .prettierrc.js
 .watchmanconfig
 android/app/src/main/res/mipmap*
+__tests__
 
 # node.js
 #
