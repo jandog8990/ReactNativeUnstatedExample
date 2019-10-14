@@ -7,6 +7,7 @@
  */
 
 import React, { Component } from 'react';
+import axios from 'react-native-axios';
 import {
   FlatList,
   ActivityIndicator, 
@@ -37,25 +38,25 @@ export default class UnstatedApp extends Component {
   }
 
   fetchJSONAsync = async(url) => {
-	try {	
-		const response = await fetch(url);
-		const responseJson = await response.json();
-		console.log("Response Json:");
-		console.log(responseJson);
-		console.log("\n");
-			
-		this.setState({
-		  isLoading: false,
-		  dataSource: responseJson.movies
-		});
+    try {
+	  const resp = await axios.get(url);
+	  console.log("Axios Resp Object:");
+	  console.log(resp.data.gridBooks);
+	  console.log("\n");
+		
+	  this.setState({
+	    isLoading: false,
+	    dataSource: resp.data.gridBooks
+	  });
 	} catch(err) {
-	    console.error(err);
+	  console.error(err);
 	}
-  }
-
+  } 
+  
   // Component did mount -> fetch network
   componentDidMount() {
-    let url = 'https://facebook.github.io/react-native/movies.json';
+    //let url = 'https://facebook.github.io/react-native/movies.json';
+	let url = 'https://b0d67d01.ngrok.io/android/books';	
 	this.fetchJSONAsync(url);
   }
 
@@ -77,7 +78,7 @@ export default class UnstatedApp extends Component {
 		<View style={styles.sectionContainer}>
 		  <FlatList
 			data={this.state.dataSource}
-			renderItem={({item}) => <Text>{item.title}, {item.releaseYear}</Text>}
+			renderItem={({item}) => <Text>{item.TITLE}, {item.AUTHOR}</Text>}
 			keyExtractor={({id}, index) => id}
 		  />
 		</View>
@@ -86,8 +87,26 @@ export default class UnstatedApp extends Component {
   }
 }
 
-	
-	/*
+/*
+  fetchJSONAsync = async(url) => {
+	try {	
+		const response = await fetch(url);
+		const responseJson = await response.json();
+		console.log("Response Json:");
+		console.log(responseJson);
+		console.log("\n");
+			
+		this.setState({
+		  isLoading: false,
+		  dataSource: responseJson.movies
+		});
+	} catch(err) {
+	    console.error(err);
+	}
+  }
+*/
+
+/*
 	return fetch('https://facebook.github.io/react-native/movies.json')
 	  .then((response) => response.json())
 	  .then((responseJson) => {
