@@ -20,6 +20,8 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
+.eslintrc.js
+.flowconfig
 
 # Android/IntelliJ
 #
@@ -28,18 +30,26 @@ build/
 .gradle
 local.properties
 *.iml
+.gitattributes
+.prettierrc.js
+.watchmanconfig
+android/app/src/main/res/mipmap*
 
 # node.js
 #
 node_modules/
 npm-debug.log
 yarn-error.log
+android/gradle/wrapper
+ios/ReactNativeUnstatedExample.xcworkspace
+package-lock.json
 
 # BUCK
 buck-out/
 \.buckd/
 *.keystore
 !debug.keystore
+.buckconfig
 
 # fastlane
 #
