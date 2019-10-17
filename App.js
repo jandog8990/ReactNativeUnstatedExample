@@ -1,7 +1,8 @@
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
- *
+ * TODO: Import react native navigation 
+ * 
  * @format
  * @flow
  */
