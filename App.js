@@ -8,8 +8,17 @@
  */
 
 import React, { Component } from 'react';
+import { Subscribe, Provider } from 'unstated';
+/*
+import { BookContainer } from './BookContainer'
+import { CounterContainer } from './CounterContainer'
+import { LocationsContainer } from './LocationsContainer'
+import AppContainer from './AppContainer'
+*/
+
 import axios from 'react-native-axios';
 import {
+  Platform, 
   FlatList,
   ActivityIndicator, 
   SafeAreaView,
@@ -17,9 +26,12 @@ import {
   ScrollView,
   View,
   Text,
+  Button,
+  TextInput,
   StatusBar,
-  Image,
+  Image
 } from 'react-native';
+
 
 import {
   Header,
@@ -31,6 +43,7 @@ import {
 
 // Import another project file
 //import List from './components/List'
+import uuidV4 from 'uuid/v4'
 
 //const App: () => React$Node = () => {
 export default class UnstatedApp extends Component {
@@ -83,11 +96,8 @@ export default class UnstatedApp extends Component {
           </View> 
 		)
 	  }
-
-	  //renderItem={({item}) => <Text>{item.TITLE}, {item.AUTHOR}</Text>}
-	  //horizontal	
-	  //SeparatorComponent={() => <View style={{marginRight: 5}} />}	
-	  return (
+	
+	  /*
 		<View style={{alignItems: 'center', top: 50}}>
 		<View style={styles.sectionContainer}>
 		  <FlatList
@@ -97,9 +107,19 @@ export default class UnstatedApp extends Component {
 		  />
 		</View>
 		</View>
-	  );
-  }
-}
+	  */
+
+	  //renderItem={({item}) => <Text>{item.TITLE}, {item.AUTHOR}</Text>}
+	  //horizontal	
+	  //SeparatorComponent={() => <View style={{marginRight: 5}} />}	
+	  return (
+	    <Provider>
+		  <Subscribe to={[BookContainer, CounterContainer, LocationsContainer]}>
+		    {(bookStore, counterStore, locationsStore) => (
+			  <AppContainer
+			    bookStore={bookStore}
+				counterStore={counterStore}
+				locationsStore={locationsStore}
 
 /*
   fetchJSONAsync = async(url) => {
