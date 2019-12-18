@@ -73,7 +73,7 @@ export default class UnstatedApp extends Component {
   // Component did mount -> fetch network
   componentDidMount() {
     //let url = 'https://facebook.github.io/react-native/movies.json';
-	let url = 'https://b0d67d01.ngrok.io/android/books';	
+	let url = 'https://eaa8d46a.ngrok.io/android/books';	
 	this.fetchJSONAsync(url);
   }
 
@@ -96,8 +96,23 @@ export default class UnstatedApp extends Component {
           </View> 
 		)
 	  }
+
+		// Typescript Provider for linking multiple modules to the main app (check react-native docs)
+		  /*
+	    <Provider>
+		  <Subscribe to={[BookContainer, CounterContainer, LocationsContainer]}>
+		    {(bookStore, counterStore, locationsStore) => (
+			  <AppContainer
+			    bookStore={bookStore}
+				counterStore={counterStore}
+				locationsStore={locationsStore}
+		*/
+
+	  //renderItem={({item}) => <Text>{item.TITLE}, {item.AUTHOR}</Text>}
+	  //horizontal	
+	  //SeparatorComponent={() => <View style={{marginRight: 5}} />}	
+	  return (
 	
-	  /*
 		<View style={{alignItems: 'center', top: 50}}>
 		<View style={styles.sectionContainer}>
 		  <FlatList
@@ -107,56 +122,9 @@ export default class UnstatedApp extends Component {
 		  />
 		</View>
 		</View>
-	  */
-
-	  //renderItem={({item}) => <Text>{item.TITLE}, {item.AUTHOR}</Text>}
-	  //horizontal	
-	  //SeparatorComponent={() => <View style={{marginRight: 5}} />}	
-	  return (
-	    <Provider>
-		  <Subscribe to={[BookContainer, CounterContainer, LocationsContainer]}>
-		    {(bookStore, counterStore, locationsStore) => (
-			  <AppContainer
-			    bookStore={bookStore}
-				counterStore={counterStore}
-				locationsStore={locationsStore}
-
-/*
-  fetchJSONAsync = async(url) => {
-	try {	
-		const response = await fetch(url);
-		const responseJson = await response.json();
-		console.log("Response Json:");
-		console.log(responseJson);
-		console.log("\n");
-			
-		this.setState({
-		  isLoading: false,
-		  dataSource: responseJson.movies
-		});
-	} catch(err) {
-	    console.error(err);
+	  );
 	}
-  }
-*/
-
-/*
-	return fetch('https://facebook.github.io/react-native/movies.json')
-	  .then((response) => response.json())
-	  .then((responseJson) => {
-	    console.log("Response json = ");
-		console.log(responseJson);
-
-	    this.setState({
-	  	  isLoading: false,
-	      dataSource: responseJson.movies
-		}, function() {
-		});
- 
- 	  }).catch((err) => {
-	    console.error(err);
-	  });
- 	*/ 
+}
 
 const styles = StyleSheet.create({
   scrollView: {
