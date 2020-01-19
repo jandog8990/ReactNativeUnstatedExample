@@ -10,6 +10,7 @@
 
 import React, { Component } from 'react';
 import { Subscribe, Provider } from 'unstated';
+import { Header } from 'react-native-elements';
 //import Routes from "./Routes";
 
 /*
@@ -38,7 +39,6 @@ import {
 
 
 import {
-  Header,
   LearnMoreLinks,
   Colors,
   DebugInstructions,
@@ -117,8 +117,11 @@ export default class UnstatedApp extends Component {
   } 
   
   // Component did mount -> fetch network
-  // NOTE: Using the /routes/android-profile.js router for /genres/:genreID
-  // where the DB query is done using the SEARCH_ID
+  /* TODO:
+   * 1. Need to query the database for all genres prior to loading
+   * data into the nested FlatList views 
+   * 2. Need a BestSellers section in the DB 
+   */ 
   componentDidMount() {
 	  //let url = 'https://facebook.github.io/react-native/movies.json';
 	  let server = 'http://40b3a28b.ngrok.io';
@@ -127,9 +130,10 @@ export default class UnstatedApp extends Component {
 	  let url1 = server + route + 'history';
 	  let url2 = server + route + 'poetry';
 	  let url3 = server + route + 'fiction';
+	  let url4 = server + route + 'biography';
 
 	  // create the url array 
-	  let urlArr = [url1, url2, url3];
+	  let urlArr = [url1, url2, url3, url4];
 	  console.log("Url Arr:");
 	  console.log(urlArr);
 	  console.log("\n");
@@ -141,7 +145,7 @@ export default class UnstatedApp extends Component {
   _renderItem(item) {
     return (
 		<TouchableOpacity  onPress={() => console.log('image clicked')}>
-		<Image style={{width: 120, height: 180, marginRight: 10, marginTop: 12}} source={{uri: item.PHOTO_LOC}}/> 
+		<Image key={item.ISBN} style={{width: 120, height: 180, marginRight: 10, marginTop: 12}} source={{uri: item.PHOTO_LOC}}/> 
 		</TouchableOpacity>	
 	)
   }
@@ -151,9 +155,8 @@ export default class UnstatedApp extends Component {
         uri: 'https://upload.wikimedia.org/wikipedia/commons/d/de/Bananavarieties.jpg'
       }; 
 	
-	  // Create FlatList views from the datasource of Genres
 	  let dataSource = this.state.dataSource; 
-	  let flatListArr = []; 
+	  let genreListArr = []; 
 	  console.log("Genres:"); 
 	  for (var i = 0; i < dataSource.length; i++) {
 	  		//console.log(dataSource);
@@ -161,6 +164,28 @@ export default class UnstatedApp extends Component {
 	  }
 	  console.log("\n");
 	  
+	  // Create FlatList views from the datasource of Genres
+	  genreListArr = dataSource.map(dataObj => ( 
+		 <View key={dataObj.genreName} style={styles.sectionListView}> 
+		 <Text style={styles.sectionTitle}>{dataObj.genreName}</Text>  
+		 <FlatList
+			horizontal={true}	
+			showsHorizontalScrollIndicator={false}	
+			contentContainerStyle={{
+				alignSelf: 'flex-start'
+			}}
+			renderItem={({item}) => this._renderItem(item)} 
+			keyExtractor={({id}, index) => id}
+			data={dataObj.books}
+		  />
+		 </View> 
+	  ));
+	  console.log("Book FlatList Arr:");
+	  genreListArr.map(obj => { 
+		  console.log(obj);
+  	  });
+	  console.log("\n");
+
 	  if (this.state.isLoading) {
 	    return(
 		  <View style={{flex: 1, paddingTop: 40}}>
@@ -184,9 +209,9 @@ export default class UnstatedApp extends Component {
 		</View>
 		</View>
 	 	*/ 
-	  return (
-		  <ScrollView style={styles.sectionContainer}>	
-			 <View style={styles.sectionListView}> 
+		/*	
+			 
+		  	 <View style={styles.sectionListView}> 
 		  	 <Text style={styles.sectionTitle}>{this.state.dataSource[0].genreName}</Text>  
 	  		 <FlatList
 				horizontal={true}	
@@ -213,7 +238,21 @@ export default class UnstatedApp extends Component {
 				data={this.state.dataSource[1].books}
 			  />
 			 </View> 
+	 	*/ 
+		/* 
+		  <View style={{flex: 1}}> 
+	 	  </View> 
+	 	*/ 
+	  return (
+		  <View style={{flex:1}}> 
+		  <Header centerComponent={{ text: 'Abantu', style: { color: 'black' } }} containerStyle={{
+    backgroundColor: 'white',
+    justifyContent: 'center',
+  }}/>
+		  <ScrollView bounces={false} style={styles.sectionContainer}>
+		  	{genreListArr}
 		  </ScrollView>
+	 	  </View> 
 	  );
 	}
 }
@@ -240,8 +279,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
   },
   sectionContainer: {
-    top: 100,
-    paddingHorizontal: 24,
+	height: 100,	
+	top: 20,
+    marginBottom: 60, 
+	paddingHorizontal: 24,
   },
   sectionListView: {
 	  marginBottom: 20
