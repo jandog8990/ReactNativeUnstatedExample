@@ -60,15 +60,16 @@ export default class Home extends Component {
 	// Navigation options for the top header
 	static navigationOptions = {
 		headerTitle: () => <LogoTitle/>,
+		headerBackTitleVisible: false,	
 		headerLeft: () =>
 			<Icon
-				containerStyle={{paddingLeft:20, paddingTop: 10}}
+				containerStyle={{paddingLeft:20, paddingTop: 5}}
 				type="ionicon"
 				name={Platform.OS === "ios" ? "ios-contact" : "md-contact"}
 			/>,
 		headerRight: () =>
 			<Icon
-				containerStyle={{paddingRight:20, paddingTop: 10}}
+				containerStyle={{paddingRight:20, paddingTop: 5}}
 				type="ionicon"
 				name={Platform.OS === "ios" ? "ios-search" : "md-searchs"}
 			/>	
@@ -161,7 +162,7 @@ export default class Home extends Component {
   // Render item function
   _renderItem(item) {
     return (
-		<TouchableOpacity  onPress={() => console.log('image clicked')}>
+		<TouchableOpacity  onPress={() => this.props.navigation.navigate('ShopList')}>
 		<Image key={item.ISBN} style={{width: 120, height: 180, marginRight: 10, marginTop: 12}} source={{uri: item.PHOTO_LOC}}/> 
 		</TouchableOpacity>	
 	)

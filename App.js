@@ -6,10 +6,11 @@ import { createAppContainer, } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs'; 
 import Home from './src/screens/Home';
-// import Details from './src/screens/Details';
+import ShopList from './src/screens/ShopList';
 
 const AppNavigator = createStackNavigator({
-	Home: Home
+	Home: Home,
+	ShopList: ShopList
 }, {
 	initialRouteParams: Home,
 	// Header config from home screen
@@ -25,7 +26,7 @@ const AppNavigator = createStackNavigator({
 		},
 	},
 	navigationOptions: {
-		tabBarLabel: 'Home',
+		tabBarLabel: 'Home'
 	},
 });
 
