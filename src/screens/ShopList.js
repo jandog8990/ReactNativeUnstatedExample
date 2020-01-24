@@ -57,8 +57,6 @@ export default class ShopList extends React.Component {
 	FlatListItemSeparator = () => <View style={styles.line} />;
 	
 	selectItem = data => {
-		data.item.isSelect = !data.item.isSelect;
-		data.item.selectedClass = data.item.isSelect ? styles.selected : styles.list;
 
 		console.log("Data Item")
 		console.log(data.item)
@@ -69,21 +67,57 @@ export default class ShopList extends React.Component {
 		console.log("\n")
 
 		// Rset the datasources before selecting new
-		responseJson = this.state.dataSource.map(it => {
+		const responseJson = this.state.dataSource.map(it => {
 			it.isSelect = false;
 			it.selectedClass = styles.list;
 			
 			return it;
 		});
+
+		/*
+		this.setState({
+			dataSource: responseJson 
+		});
+		*/
+	
+		//const responseJson = this.state.dataSource;
+		console.log("Data Item")
+		console.log(data.item.id)
+		console.log("\n")
 		
-		const index = this.state.dataSource.findIndex(
-			item => data.item.id === item.id
+		//const index = this.state.dataSource.findIndex(
+		const index = responseJson.findIndex(
+			item => {
+				if (data.item.id == item.id) {	
+					console.log("item.id = " + item.id);	
+					idx = data.item.id === item.id;
+					console.log("idx = " + idx);
+					console.log("data item:");
+					console.log(data.item);	
+					console.log("item:");	
+					console.log(item);
+					console.log("---------------------------------------");	
+					console.log("\n")
+				}	
+				data.item.id === item.id
+			}	
 		);
 		
-		this.state.dataSource[index] = data.item;
+		data.item.isSelect = !data.item.isSelect;
+		data.item.selectedClass = data.item.isSelect ? styles.selected : styles.list;
+	
+		console.log("Index = " + index);
+		console.log("Data Item")
+		console.log(data.item)
+		console.log("-------------------------------------")	
+		console.log("\n")
 		
+		//this.state.dataSource[index] = data.item;
+		responseJson[index] = data.item;
+
+			//dataSource: this.state.dataSource,
 		this.setState({
-			dataSource: this.state.dataSource,
+			dataSource: responseJson, 
 		});
 	};
 	
@@ -113,7 +147,7 @@ export default class ShopList extends React.Component {
 	 
 	 return (
 		<View style={styles.container}>
-		<Text style={styles.title}>Who gives a fuck</Text>
+		<Text style={styles.title}>EVERYONE gives a fuck :)</Text>
 		<FlatList
 			data={this.state.dataSource}
 			ItemSeparatorComponent={this.FlatListItemSeparator}
