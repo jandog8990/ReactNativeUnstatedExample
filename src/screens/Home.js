@@ -57,6 +57,14 @@ export default App;
 
 //const App: () => React$Node = () => {
 export default class Home extends Component {
+
+    // Constructor props and state init
+    constructor(props) {
+    	super(props);
+		this.state = { isLoading: true, dataSource: []};
+  		this.server = 'https://c24feb7b.ngrok.io';
+	}
+	
 	// Navigation options for the top header
 	static navigationOptions = {
 		headerTitle: () => <LogoTitle/>,
@@ -74,12 +82,6 @@ export default class Home extends Component {
 				name={Platform.OS === "ios" ? "ios-search" : "md-searchs"}
 			/>	
 	};
-
-  // Constructor props and state init
-  constructor(props) {
-    super(props);
-	this.state = { isLoading: true, dataSource: []}
-  }
 
   fetchJSONAsync = async(urlArr) => {
 	  //let requests = new Array(); 
@@ -142,7 +144,7 @@ export default class Home extends Component {
    */ 
   componentDidMount() {
 	  //let url = 'https://facebook.github.io/react-native/movies.json';
-	  let server = 'http://40b3a28b.ngrok.io';
+	  let server = this.server; 
 	  let route = '/android/genres/';
 	  //let url1 = server + 'android/books'; 
 	  let url1 = server + route + 'history';
@@ -161,8 +163,9 @@ export default class Home extends Component {
 
   // Render item function
   _renderItem(item) {
+		//<TouchableOpacity  onPress={() => this.props.navigation.navigate('ShopList')}>
     return (
-		<TouchableOpacity  onPress={() => this.props.navigation.navigate('ShopList')}>
+		<TouchableOpacity  onPress={() => this.props.navigation.navigate('MyModal')}>
 		<Image key={item.ISBN} style={{width: 120, height: 180, marginRight: 10, marginTop: 12}} source={{uri: item.PHOTO_LOC}}/> 
 		</TouchableOpacity>	
 	)
