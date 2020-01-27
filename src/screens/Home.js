@@ -164,8 +164,9 @@ export default class Home extends Component {
   // Render item function
   _renderItem(item) {
 		//<TouchableOpacity  onPress={() => this.props.navigation.navigate('ShopList')}>
+		//<TouchableOpacity  onPress={() => this.props.navigation.navigate('ChaptersModal')}>
     return (
-		<TouchableOpacity  onPress={() => this.props.navigation.navigate('MyModal')}>
+		<TouchableOpacity  onPress={() => this.props.navigation.navigate('FullPlayer')}>
 		<Image key={item.ISBN} style={{width: 120, height: 180, marginRight: 10, marginTop: 12}} source={{uri: item.PHOTO_LOC}}/> 
 		</TouchableOpacity>	
 	)
@@ -265,11 +266,11 @@ export default class Home extends Component {
 	 	  </View> 
 	 	*/ 
 	  return (
-		  <View style={styles.sectionContainer}>
+		  <SafeAreaView style={styles.sectionContainer}>
 		  <ScrollView bounces={false} style={styles.genreScrollView}>
 		  	{genreListArr}
 		  </ScrollView>
-	 	  </View> 
+	 	  </SafeAreaView> 
 	  );
 	}
 }

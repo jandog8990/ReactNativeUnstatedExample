@@ -6,12 +6,13 @@ import { createAppContainer, } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs'; 
 import Home from './src/screens/Home';
-import ShopList from './src/screens/ShopList';
-import ChapterListModal from './src/screens/ChapterListModal';
+//import ShopList from './src/screens/ShopList';
+import ChapterListModal from './src/screens/AudioPlayer/ChapterListModal';
+import FullPlayer from './src/screens/AudioPlayer/FullPlayer';;
 
 const MainStack = createStackNavigator({
 	Home: Home,
-	ShopList: ShopList
+	FullPlayer: FullPlayer,	
 }, {
 	initialRouteParams: Home,
 	// Header config from home screen
@@ -39,13 +40,13 @@ const RootStack = createStackNavigator(
 		Main: {
 			screen: MainStack,
 		},
-		MyModal: {
+		ChaptersModal: {
 			screen: ChapterListModal, 
 		}
 	},
 	{
+		headerMode: 'none',
 		mode: 'modal',
-    	headerMode: 'none',
 	}
 );
 
