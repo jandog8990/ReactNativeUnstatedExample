@@ -31,17 +31,22 @@ const AlbumArt = ({
 
 export default AlbumArt;
 
-let { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
+const ratio = width/350;
+/*
 width = width - 24;
 height = height - 420;
+*/
 
 const styles = StyleSheet.create({
   container: {
+   	justifyContent: 'center',	
+	alignItems: 'center', 
     paddingLeft: 12,
     paddingRight: 12,
   },
   image: {
-    width: width,
-    height: height,
+	width: 275,
+	height: 417,
   },
 })

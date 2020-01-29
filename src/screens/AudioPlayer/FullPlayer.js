@@ -12,12 +12,13 @@ import {
   StatusBar,
   TouchableOpacity,
   ActivityIndicator,
-  SafeAreaView
+  SafeAreaView,
+  Dimensions
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Header from './Header';
 import AlbumArt from './AlbumArt';
-import TrackDetails from './TrackDetails';
+import ChapterDetails from './ChapterDetails';
 import SeekBar from './SeekBar';
 import Controls from './Controls';
 import Video from 'react-native-video';
@@ -45,13 +46,12 @@ export default class FullPlayer extends Component {
     this.state = {
       isLoading: true,
 	  dataSource: {},
+	  chapterList: [], 
 	  rate: 1, 
 	  paused: true,
       totalLength: 1,
       currentPosition: 0,
-      selectedTrack: 0,
-      repeatOn: false,
-      shuffleOn: false,
+      selectedChapter: 0,
 	  volume: 1,
 	  duration: 0.0,
 	  currentTime: 0.0,
@@ -65,9 +65,10 @@ export default class FullPlayer extends Component {
 			//headerLeftContainerStyle: {paddingLeft: 20},	
 			//name={Platform.OS === "ios" ? "ios-down-arrow" : "md-down-arrow"}
 		return {
-			title: "Full Player", 
+			title: navigation.getParam('bookTitle', 'Full Player'),
+			gesturesEnabled: false,	
 			headerBackTitleVisible: false,	
-			headerTitleStyle: { color: 'black' },	
+			headerTitleStyle: { color: 'black', fontSize: 14, width : Dimensions.get('window').width/1.6, textAlign: 'center'},	
 			headerStyle: { backgroundColor: 'white' },
 			headerTintColor: 'black',
 			headerLeft: () =>
@@ -107,9 +108,21 @@ export default class FullPlayer extends Component {
 			console.log("Axis Response:");
 			console.log(resp.data);
 			console.log("\n");
+		
+			// TODO Append the spaces with %20 fill in for audio files to run
+			const audioList = resp.data.audioBook.audio_list;	
+			const audioLen = audioList.length; 
+			console.log("Audio len = " + audioLen);
+			for (var i = 0; i < audioLen; i++) {
+				var audio = audioList[i].AUDIO_LOC;
+				var encode = audio.replace(/ /g, "%20");
+				audioList[i].AUDIO_LOC = encode;
+			}
+
 			this.setState({
 				isLoading: false,
-				dataSource: resp.data.audioBook
+				dataSource: resp.data.audioBook,
+				chapterList: audioList 
 			});
 		} catch(err) {
 			console.error(err);
@@ -118,7 +131,7 @@ export default class FullPlayer extends Component {
 
   onLoad(data) {
     console.log("On Load Fired (data)!");
-    console.log(this.state.selectedTrack);	
+    console.log(this.state.selectedChapter);	
 	console.log(data);	
 	console.log(data.target);
 	console.log("\n");
@@ -134,7 +147,7 @@ export default class FullPlayer extends Component {
 
   onPlay(data) {
     console.log("On Press Play(data)!");
-	//console.log(data);
+	console.log("data duration = " + data.duration);
 	this.setState({paused: false});
 	this.setState({duration: data.duration});
   }
@@ -147,13 +160,15 @@ export default class FullPlayer extends Component {
 
   setDuration(data) {
     console.log("Set Duration (data):"); 
-	console.log(data);
+	console.log(data.duration);
 	console.log("\n");
     this.setState({totalLength: Math.floor(data.duration)});
   }
 
   setTime(data) {
-    //console.log(data);
+   	console.log("Set Time:"); 
+	console.log(data.currentTime);
+	console.log("\n");
     this.setState({currentPosition: Math.floor(data.currentTime)});
   }
 
@@ -169,7 +184,7 @@ export default class FullPlayer extends Component {
   onBack() {
     console.log("On Back:");
 	
-	if (this.state.currentPosition < 10 && this.state.selectedTrack > 0) {
+	if (this.state.currentPosition < 10 && this.state.selectedChapter > 0) {
       this.refs.audioElement && this.refs.audioElement.seek(0);
       this.setState({ isChanging: true });
       setTimeout(() => this.setState({
@@ -177,7 +192,7 @@ export default class FullPlayer extends Component {
         paused: false,
         totalLength: 1,
         isChanging: false,
-        selectedTrack: this.state.selectedTrack - 1,
+        selectedChapter: this.state.selectedChapter - 1,
       }), 0);
     } else {
       this.refs.audioElement.seek(0);
@@ -188,7 +203,7 @@ export default class FullPlayer extends Component {
   }
 
   onForward() {
-    if (this.state.selectedTrack < this.props.tracks.length - 1) {
+    if (this.state.selectedChapter < this.state.chapterList.length - 1) {
       this.refs.audioElement && this.refs.audioElement.seek(0);
       this.setState({ isChanging: true });
       setTimeout(() => this.setState({
@@ -196,7 +211,7 @@ export default class FullPlayer extends Component {
         totalLength: 1,
         paused: false,
         isChanging: false,
-        selectedTrack: this.state.selectedTrack + 1,
+        selectedChapter: this.state.selectedChapter + 1,
       }), 0);
     }
   }
@@ -204,9 +219,12 @@ export default class FullPlayer extends Component {
 
 
   render() {
-	  let dataSource = this.state.dataSource;
-	  console.log("Data Source:");
-	  console.log(dataSource);
+	  const dataSource = this.state.dataSource;
+	  const chapter = this.state.chapterList[this.state.selectedChapter];
+
+	  console.log("Selectd chapter = " + this.state.selectedChapter);
+	  console.log("Chapter:");
+	  console.log(chapter);
 	  console.log("\n");
 
 	  if (this.state.isLoading) {
@@ -216,39 +234,26 @@ export default class FullPlayer extends Component {
 			  </SafeAreaView>
 		  )
 	  }
-
-	//    onLoadStart={this.loadStart} // Callback when video starts to load
-    //    onLoad={this.setDuration.bind(this)}    // Callback when video loads
-    //    onProgress={this.setTime.bind(this)}    // Callback every ~250ms with currentTime
-    //    onEnd={this.onEnd}           // Callback when playback finishes
-	//const video = this.state.isChanging ? null : (
-    //);
-    /* 
-	  	<TouchableOpacity style={styles.fullScreen} onPress={() => {this.setState({paused: !this.    state.paused})}}> 
-       	</TouchableOpacity> 
-	*/
-
-    /* 
-	  this.state.paused
-	  this.state.volume
-		eslint-disable
-	*/
-			//onLoad={() => {console.log("ON LOAD!!")}}    // Callback when video loads
-			/*	
-			source={{uri: "https://euums.baseservers.com/abantuaudio/mp4:A%20Comparative%20Study%20of%20the%20Negro%20Problem.mp4/playlist.m3u8", type: "m3u8"}}
-			muted={false}	
-			paused={false}   // Pauses playback entirely.
-			volume={1.0}	 // Volume for player
-			resizeMode="cover"           // Fill the whole screen at aspect ratio.
-			repeat={true}                // Repeat forever.
-			ref={ref => {
-			  this.player = ref;
-			}} // Store reference
-   			*/ 
 		
-	  	/*	  
+	  /*	  
+	  */
+	
+	/*
+	 * Play the audio in the background requires:
+	 * 		playInBackground=true	
+	 *		ignoreSilentSwitch="ignore"	
+	 */
+        //<Header message="Playing From Charts" />
+	//dataSource.photo_loc
+        //<AlbumArt url={"/Users/alejandrogonzales/Development/MyProjects/React-Native/ReactMusic/img/migueloutlaw.jpg"}/>
+	console.log("Chapter list length = " + this.state.chapterList.length);	
+	console.log("Audio loc = " + chapter.AUDIO_LOC);
+	console.log("Photo loc = " + chapter.PHOTO_LOC);	
+	console.log("\n");
+	return (
+      <SafeAreaView style={styles.container}>
 	  	<Video
-			source={{uri: track.audioUrl, type: "m3u8"}} // Can be a URL or a local file.
+			source={{uri: chapter.AUDIO_LOC, type: "m3u8"}} // Can be a URL or a local file.
 			ref="audioElement"
 			playInBackground={true}	
 			ignoreSilentSwitch="ignore"	
@@ -257,7 +262,7 @@ export default class FullPlayer extends Component {
 			onLoadStart={this.loadStart} // Callback when video starts to load
 			onLoad={this.setDuration.bind(this)} // Callback when video loads
 			onProgress={this.setTime.bind(this)} // Callback every ~250ms with currentTime
-			onEnd={() => { AlertIOS.alert('Done!') }} 
+			onEnd={() => { console.log("Audio ended..."); }} 
 			resizeMode="cover"
 			rate={this.state.rate}
 			onBuffer={this.onBuffer} // Callback when remote video is buffering
@@ -265,44 +270,28 @@ export default class FullPlayer extends Component {
 			fullscreen={false}
 		  />
 		<StatusBar hidden={true} />
-        <Header message="Playing From Charts" />
-        <AlbumArt url={track.albumArtUrl} />
-        <TrackDetails title={track.title} artist={track.artist} />
-        <SeekBar
-          onSeek={this.seek.bind(this)}
-          trackLength={this.state.totalLength}
-          onSlidingStart={() => this.setState({paused: true})}
-          currentPosition={this.state.currentPosition} />
+        <AlbumArt url={chapter.PHOTO_LOC} />
+        <ChapterDetails title={chapter.TITLE} /> 
+		<SeekBar
+        	onSeek={this.seek.bind(this)}
+          	chapterLength={this.state.totalLength}
+          	onSlidingStart={() => this.setState({paused: true})}
+          	currentPosition={this.state.currentPosition} />
         <Controls
-          onPressRepeat={() => this.setState({repeatOn : !this.state.repeatOn})}
-          repeatOn={this.state.repeatOn}
-          shuffleOn={this.state.shuffleOn}
-          forwardDisabled={this.state.selectedTrack === this.props.tracks.length - 1}
-          onPressShuffle={() => this.setState({shuffleOn: !this.state.shuffleOn})}
-          onPressPlay={this.onPlay} 
-          onPressPause={this.onPause}
-          onBack={this.onBack.bind(this)}
-          onForward={this.onForward.bind(this)}
-          paused={this.state.paused}/>
-	 	<View>
+          	forwardDisabled={this.state.selectedChapter === this.state.chapterList.length - 1}
+          	onPressPlay={this.onPlay} 
+          	onPressPause={this.onPause}
+          	onBack={this.onBack.bind(this)}
+          	onForward={this.onForward.bind(this)}
+          	paused={this.state.paused}/>
+		<View>
 		  <TouchableOpacity> 
 			<View style={styles.chapterButton}> 
 			  <Image source={require('../../../img/2x/baseline_format_list_bulleted_black_36dp.png')} style={styles.buttons} />
 			  <Text style={styles.chapters}>Chapters</Text>	
 		    </View>
 		  </TouchableOpacity>
-		</View>
-	 */
-	
-	/*
-	 * Play the audio in the background requires:
-	 * 		playInBackground=true	
-	 *		ignoreSilentSwitch="ignore"	
-	 */
-        //<Header message="Playing From Charts" />
-	return (
-      <SafeAreaView style={styles.container}>
-		<StatusBar hidden={true} />
+	    </View>
 	  </SafeAreaView>
     );
   }
@@ -313,6 +302,7 @@ const styles = {
   container: {
     flex: 1,
     backgroundColor: 'white', 
+ 	marginTop: 10 
   },
   chapters: {
     fontSize: 12,
@@ -320,12 +310,12 @@ const styles = {
     textAlign: 'center',
   },
   buttons: {
- 	width: 50,
- 	height: 50,
-    tintColor: 'rgb(64,64,64)'
+ 	width: 35,
+ 	height: 35,
+    tintColor: 'purple'
   },
   chapterButton: {
-    paddingTop: 40,	
+    paddingTop: 30,	
 	alignItems: 'center',
 	justifyContent: 'center',
   },

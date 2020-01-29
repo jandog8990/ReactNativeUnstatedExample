@@ -45,6 +45,9 @@ android/gradle/wrapper
 ios/ReactNativeUnstatedExample.xcworkspace
 package-lock.json
 
+# Files
+*.*.swp
+
 # BUCK
 buck-out/
 \.buckd/

@@ -26,13 +26,13 @@ const minutesAndSeconds = (position) => ([
 ]);
 
 const SeekBar = ({
-  trackLength,
+  chapterLength,
   currentPosition,
   onSeek,
   onSlidingStart,
 }) => {
   const elapsed = minutesAndSeconds(currentPosition);
-  const remaining = minutesAndSeconds(trackLength - currentPosition);
+  const remaining = minutesAndSeconds(chapterLength - currentPosition);
   return (
     <View style={styles.container}>
       <View style={{flexDirection: 'row'}}>
@@ -41,11 +41,11 @@ const SeekBar = ({
         </Text>
         <View style={{flex: 1}} />
         <Text style={[styles.text, {width: 40}]}>
-          {trackLength > 1 && "-" + remaining[0] + ":" + remaining[1]}
+          {chapterLength > 1 && "-" + remaining[0] + ":" + remaining[1]}
         </Text>
       </View>
       <Slider
-        maximumValue={Math.max(trackLength, 1, currentPosition + 1)}
+        maximumValue={Math.max(chapterLength, 1, currentPosition + 1)}
         onSlidingStart={onSlidingStart}
         onSlidingComplete={onSeek}
         value={currentPosition}

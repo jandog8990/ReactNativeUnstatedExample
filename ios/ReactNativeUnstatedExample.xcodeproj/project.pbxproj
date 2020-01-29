@@ -194,7 +194,6 @@
 				00B2938D323BC49A522AD58A /* Pods-ReactNativeUnstatedExampleTests.debug.xcconfig */,
 				9B412BC57707AA5438020BFE /* Pods-ReactNativeUnstatedExampleTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -309,6 +308,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);

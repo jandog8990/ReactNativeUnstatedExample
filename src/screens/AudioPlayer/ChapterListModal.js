@@ -10,7 +10,6 @@ import {
 	Text 
 } from 'react-native';
 import { Icon } from 'react-native-elements';
-
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 /**

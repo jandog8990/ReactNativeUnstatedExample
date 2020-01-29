@@ -52,8 +52,8 @@ const RootStack = createStackNavigator(
 
 // More control over root component (export component that renders MainStack)
 //export default createAppContainer(MainStack);
-const Tabs = createBottomTabNavigator({ RootStack });
-const AppContainer = createAppContainer(Tabs);
+//const Tabs = createBottomTabNavigator({ RootStack });
+const AppContainer = createAppContainer(RootStack);
 
 export default class App extends React.Component {
 	render() {

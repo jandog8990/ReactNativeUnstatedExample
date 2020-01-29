@@ -68,6 +68,7 @@ export default class Home extends Component {
 	// Navigation options for the top header
 	static navigationOptions = {
 		headerTitle: () => <LogoTitle/>,
+		gesturesEnabled: false,	
 		headerBackTitleVisible: false,	
 		headerLeft: () =>
 			<Icon
@@ -166,7 +167,8 @@ export default class Home extends Component {
 		//<TouchableOpacity  onPress={() => this.props.navigation.navigate('ShopList')}>
 		//<TouchableOpacity  onPress={() => this.props.navigation.navigate('ChaptersModal')}>
     return (
-		<TouchableOpacity  onPress={() => this.props.navigation.navigate('FullPlayer')}>
+		<TouchableOpacity onPress={() => {
+			this.props.navigation.navigate('FullPlayer', {bookTitle: item.TITLE})}}>
 		<Image key={item.ISBN} style={{width: 120, height: 180, marginRight: 10, marginTop: 12}} source={{uri: item.PHOTO_LOC}}/> 
 		</TouchableOpacity>	
 	)

@@ -16,33 +16,19 @@ import {
   Dimensions,
 } from 'react-native';
 
-const TrackDetails = ({
+export default ChapterDetails = ({
   title,
-  artist,
-  onAddPress,
-  onMorePress,
-  onTitlePress,
-  onArtistPress,
+  chapter,
+  duration,
+  photo_loc,
+  audio_loc 
 }) => (
   <View style={styles.container}>
-    <TouchableOpacity onPress={onAddPress}>
-      <Image style={styles.button}
-        source={require('../../../img/ic_add_circle_outline_white.png')} style={styles.buttons}/>
-    </TouchableOpacity>
     <View style={styles.detailsWrapper}>
-      <Text style={styles.title} onPress={onTitlePress}>{title}</Text>
-      <Text style={styles.artist} onPress={onArtistPress}>{artist}</Text>
+      <Text style={styles.title}>{title}</Text>
     </View>
-    <TouchableOpacity onPress={onMorePress}>
-      <View style={styles.moreButton}>
-        <Image style={styles.moreButtonIcon}
-          source={require('../../../img/ic_more_horiz_white.png')} style={styles.buttons}/>
-      </View>
-    </TouchableOpacity>
   </View>
 );
-
-export default TrackDetails;
 
 const styles = StyleSheet.create({
   container: {
@@ -63,7 +49,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: 'black',
+    color: 'dimgrey',
     textAlign: 'center',
   },
   artist: {
