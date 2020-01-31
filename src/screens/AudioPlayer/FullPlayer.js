@@ -256,6 +256,7 @@ export default class FullPlayer extends Component {
 			source={{uri: chapter.AUDIO_LOC, type: "m3u8"}} // Can be a URL or a local file.
 			ref="audioElement"
 			playInBackground={true}	
+			playWhenInactive={true}	
 			ignoreSilentSwitch="ignore"	
 			style={styles.audioElement}
 			paused={this.state.paused}

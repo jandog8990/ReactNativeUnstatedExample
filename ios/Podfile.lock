@@ -183,7 +183,7 @@ PODS:
     - React-cxxreact (= 0.61.2)
     - React-jsi (= 0.61.2)
   - React-jsinspector (0.61.2)
-  - react-native-safe-area-context (0.6.2):
+  - react-native-safe-area-context (0.6.4):
     - React
   - react-native-video/Video (5.0.2):
     - React
@@ -233,7 +233,7 @@ PODS:
     - React
   - RNReanimated (1.7.0):
     - React
-  - RNScreens (2.0.0-alpha.31):
+  - RNScreens (2.0.0-alpha.32):
     - React
   - RNVectorIcons (6.6.0):
     - React
@@ -366,7 +366,7 @@ SPEC CHECKSUMS:
   React-jsi: 32285a21b1b24c36060493ed3057a34677d58d09
   React-jsiexecutor: 8909917ff7d8f21a57e443a866fd8d4560e50c65
   React-jsinspector: 111d7d342b07a904c400592e02a2b958f1098b60
-  react-native-safe-area-context: a1d322930b8c5d04ebeb77cc47cc97575ad27203
+  react-native-safe-area-context: 042dfc9d4db17196841df962ba9497f6e7a5bd02
   react-native-video: 961749da457e73bf0b5565edfbaffc25abfb8974
   React-RCTActionSheet: 89b037c0fb7d2671607cb645760164e7e0c013f6
   React-RCTAnimation: e3cefa93c38c004c318f7ec04b883eb14b8b8235
@@ -381,7 +381,7 @@ SPEC CHECKSUMS:
   RNCMaskedView: e5b99bc191945f157adeede68da9d424462de177
   RNGestureHandler: 02905abe54e1f6e59c081a10b4bd689721e17aa6
   RNReanimated: 031fe8d9ea93c2bd689a40f05320ef9d96f74d7f
-  RNScreens: 5fcc247984ffae92240e7e8e39e1e19c0a0f6f67
+  RNScreens: a55364dc1833101f836cee70975ce1fea615a12f
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   SPTPersistentCache: df36ea46762d7cf026502bbb86a8b79d0080dff4
   Yoga: 14927e37bd25376d216b150ab2a561773d57911f

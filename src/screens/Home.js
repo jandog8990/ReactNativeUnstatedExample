@@ -162,6 +162,11 @@ export default class Home extends Component {
 	  this.fetchJSONAsync(urlArr);
   }
 
+  // Component will unmount -> for clean up
+  componentWillUnmount() {
+ 	// clear any elements or props that we no longer need 
+  }
+
   // Render item function
   _renderItem(item) {
 		//<TouchableOpacity  onPress={() => this.props.navigation.navigate('ShopList')}>
