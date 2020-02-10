@@ -9,18 +9,10 @@
  */
 
 import React, { Component } from 'react';
-import { Subscribe, Provider } from 'unstated';
 import { Platform } from 'react-native';
 import { Icon } from 'react-native-elements';
 //import Routes from "./Routes";
 import LogoTitle from './LogoTitle';
-
-/*
-import { BookContainer } from './BookContainer'
-import { CounterContainer } from './CounterContainer'
-import { LocationsContainer } from './LocationsContainer'
-import AppContainer from './AppContainer'
-*/
 
 import axios from 'react-native-axios';
 import {
@@ -46,24 +38,33 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-// Import another project file
-//import List from './components/List'
-import uuidV4 from 'uuid/v4'
+// Import the props for navigation and containers
+import { AudioBookProps } from '../interfaces/props/AudioBookProps';
+import { StackNavProps } from '../interfaces/props/StackNavProps';
+import { GenreResponse } from 'src/interfaces/network/GenreResponse';
+import { Genre } from 'src/interfaces/models/Genre';
+import { Book } from 'src/interfaces/models/Book';
 
-/*
-const App = () => <Routes/>
-export default App;
-*/
+// Combine the audio book and navigation props
+interface HomeProps extends AudioBookProps, StackNavProps {};
 
-//const App: () => React$Node = () => {
-export default class Home extends Component {
+// Initialize the Home state
+interface HomeState {
+	isLoading: boolean,
+	dataSource: Genre[]
+}
 
-    // Constructor props and state init
-    constructor(props) {
-    	super(props);
-		this.state = { isLoading: true, dataSource: []};
-  		this.server = 'https://c24feb7b.ngrok.io';
+export default class Home extends Component<HomeProps, HomeState> {
+
+	// State of the Home component
+	state: HomeState = {
+		isLoading: true,
+		dataSource: []
 	}
+
+	// Server and route will come from a config service LOLz (where's Todd??)
+	server = 'https://8fb80035.ngrok.io';
+	route = '/android/genres/';
 	
 	// Navigation options for the top header
 	static navigationOptions = {
@@ -84,9 +85,8 @@ export default class Home extends Component {
 			/>	
 	};
 
-  fetchJSONAsync = async(urlArr) => {
-	  //let requests = new Array(); 
-	  let requests = []; 
+  fetchJSONAsync = async(urlArr: string[]) => {
+	  let requests: Genre[] = new Array(); 
 	  for(var i = 0; i < urlArr.length; i++) {
 		  console.log(urlArr[i]);
 		  const request = axios.get(urlArr[i]);
@@ -98,9 +98,9 @@ export default class Home extends Component {
 	  console.log(requests);
 	  console.log("\n");
 
-	  axios.all(requests).then(axios.spread((...responses) => {
+	  axios.all(requests).then(axios.spread((...responses: GenreResponse[]) => {
 		  console.log("Responses:");
-		  let genreData = new Array(); 
+		  let genreData: Genre[] = new Array(); 
 		  for (var i = 0; i < responses.length; i++) {
 			  console.log(responses[i].data);
 		  	  console.log("\n");
@@ -114,27 +114,10 @@ export default class Home extends Component {
 			  isLoading: false,
 			  dataSource: genreData 
 		  });
-	  })).catch(errors => {
-			console.log("Errors:"); 
+	  })).catch((errors: any) => {
+		  console.log("Errors:"); 
 		  console.log(errors);
 	  });
-
-	 	/* 
-	  try {
-			console.log(urlArr[0]);	
-		  const resp = await axios.get(urlArr[0]);
-		console.log("Axios Resp Object:");
-		console.log(resp.data);
-		console.log("\n");
-
-		  this.setState({
-		isLoading: false,
-		dataSource: resp.data.gridBooks
-		});
-	  } catch(err) {
-	  	console.log(err);
-	  }
-	 	*/ 
   } 
   
   // Component did mount -> fetch network
@@ -144,14 +127,11 @@ export default class Home extends Component {
    * 2. Need a BestSellers section in the DB 
    */ 
   componentDidMount() {
-	  //let url = 'https://facebook.github.io/react-native/movies.json';
 	  let server = this.server; 
-	  let route = '/android/genres/';
-	  //let url1 = server + 'android/books'; 
-	  let url1 = server + route + 'history';
-	  let url2 = server + route + 'poetry';
-	  let url3 = server + route + 'fiction';
-	  let url4 = server + route + 'biography';
+	  let url1 = server + this.route + 'history';
+	  let url2 = server + this.route + 'poetry';
+	  let url3 = server + this.route + 'fiction';
+	  let url4 = server + this.route + 'biography';
 
 	  // create the url array 
 	  let urlArr = [url1, url2, url3, url4];
@@ -168,7 +148,7 @@ export default class Home extends Component {
   }
 
   // Render item function
-  _renderItem(item) {
+  _renderItem(item: Book) {
 		//<TouchableOpacity  onPress={() => this.props.navigation.navigate('ShopList')}>
 		//<TouchableOpacity  onPress={() => this.props.navigation.navigate('ChaptersModal')}>
     return (
@@ -180,12 +160,12 @@ export default class Home extends Component {
   }
 
   render() {
-	  let pic = {
-        uri: 'https://upload.wikimedia.org/wikipedia/commons/d/de/Bananavarieties.jpg'
-      }; 
+	//   let pic = {
+    //     uri: 'https://upload.wikimedia.org/wikipedia/commons/d/de/Bananavarieties.jpg'
+    //   }; 
 	
 	  let dataSource = this.state.dataSource; 
-	  let genreListArr = []; 
+	  let genreListArr: Element[] = []; 
 	  console.log("Genres:"); 
 	  for (var i = 0; i < dataSource.length; i++) {
 	  		//console.log(dataSource);
@@ -204,7 +184,7 @@ export default class Home extends Component {
 				alignSelf: 'flex-start'
 			}}
 			renderItem={({item}) => this._renderItem(item)} 
-			keyExtractor={({id}, index) => id}
+			keyExtractor={(book) => String(book.ISBN)}
 			data={dataObj.books}
 		  />
 		 </View> 
@@ -223,55 +203,6 @@ export default class Home extends Component {
 		)
 	  }
 
-		// Typescript Provider for linking multiple modules to the main app (check react-native docs)
-
-	  //renderItem={({item}) => <Text>{item.TITLE}, {item.AUTHOR}</Text>}
-	  //horizontal	
-	  //SeparatorComponent={() => <View style={{marginRight: 5}} />}	
-				/*	
-	  			flexDirection: 'column',
-				flexWrap: 'wrap'
-	 			*/ 
-		/*	
-		<View style={{alignItems: 'center', top: 50}}>
-		<View style={styles.sectionContainer}>
-		</View>
-		</View>
-	 	*/ 
-		/*	
-			 
-		  	 <View style={styles.sectionListView}> 
-		  	 <Text style={styles.sectionTitle}>{this.state.dataSource[0].genreName}</Text>  
-	  		 <FlatList
-				horizontal={true}	
-				showsHorizontalScrollIndicator={false}	
-		  		contentContainerStyle={{
-					alignSelf: 'flex-start'
-				}}
-				renderItem={({item}) => this._renderItem(item)} 
-				keyExtractor={({id}, index) => id}
-				data={this.state.dataSource[0].books}
-			  />
-			 </View> 
-			 
-		     <View style={styles.sectionListView}> 
-		  	 <Text style={styles.sectionTitle}>{this.state.dataSource[1].genreName}</Text>  
-			 <FlatList
-				horizontal={true}	
-				showsHorizontalScrollIndicator={false}	
-		  		contentContainerStyle={{
-					alignSelf: 'flex-start'
-				}}
-				renderItem={({item}) => this._renderItem(item)} 
-				keyExtractor={({id}, index) => id}
-				data={this.state.dataSource[1].books}
-			  />
-			 </View> 
-	 	*/ 
-		/* 
-		  <View style={{flex: 1}}> 
-	 	  </View> 
-	 	*/ 
 	  return (
 		  <SafeAreaView style={styles.sectionContainer}>
 		  <ScrollView bounces={false} style={styles.genreScrollView}>
@@ -281,16 +212,6 @@ export default class Home extends Component {
 	  );
 	}
 }
-		
-		/*
-	    <Provider>
-		  <Subscribe to={[BookContainer, CounterContainer, LocationsContainer]}>
-		    {(bookStore, counterStore, locationsStore) => (
-			  <AppContainer
-			    bookStore={bookStore}
-				counterStore={counterStore}
-				locationsStore={locationsStore}
-		*/
 
 const styles = StyleSheet.create({
   genreScrollView: {

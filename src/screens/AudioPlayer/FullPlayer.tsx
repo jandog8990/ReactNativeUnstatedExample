@@ -23,41 +23,57 @@ import SeekBar from './SeekBar';
 import Controls from './Controls';
 import Video from 'react-native-video';
 
-export default class FullPlayer extends Component {
-  constructor(props) {
-    super(props);
-	// TODO: This is the url query for the purchased books for the Library	
-	/*	
-	this.route = '/android/purchased-books/';
-	this.user = 'jandog8990';
-	*/	
-	this.route = '/android/books/player/';
-	  this.orderId = '5c81be173a162c491abb1cfd'; 
-	  this.isbn = '967714';
-	  this.titleId = 'Outlaw';
-	  this.server = 'https://c24feb7b.ngrok.io';
-	//this.audioUrl = this.server + this.route + this.user; 
-	this.audioUrl = this.server + this.route + this.isbn + "/" + this.titleId + "/" + this.orderId;
-	this.onLoad = this.onLoad.bind(this);
-	this.onProgress = this.onProgress.bind(this);
-	this.onPlay = this.onPlay.bind(this);
-	this.onPause = this.onPause.bind(this);
+// Custom objects and models from other TypeScript files
+import { AudioBookProps } from '../../interfaces/props/AudioBookProps';
+import { StackNavProps } from '../../interfaces/props/StackNavProps';
+import { Chapter } from '../../interfaces/models/Chapter';
+import { Book, initializeBook } from '../../interfaces/models/Book';
 
-    this.state = {
-      isLoading: true,
-	  dataSource: {},
-	  chapterList: [], 
-	  rate: 1, 
-	  paused: true,
-      totalLength: 1,
-      currentPosition: 0,
-      selectedChapter: 0,
-	  volume: 1,
-	  duration: 0.0,
-	  currentTime: 0.0,
-	  controls: false
-	};
+// Combine audio book and navigation props
+interface FullPlayerProps extends AudioBookProps, StackNavProps {};
+
+// Import the API configuration for hitting certain endpoints
+import { apiConfig } from '../../config/config';
+import { AudioBookResponse } from 'src/interfaces/network/AudioBookResponse';
+
+// Initialize the Full player State
+interface FullPlayerState {
+	isLoading: boolean,
+	isChanging: boolean,
+	audioBook: Book,
+	chapterList: Chapter[], 
+	rate: number, 
+	paused: boolean,
+	totalLength: number,
+	currentPosition: number,
+	selectedChapter: number,
+	volume: number,
+	duration: number,
+	currentTime: number,
+	controls: boolean
   }
+
+export default class FullPlayer extends Component<FullPlayerProps, FullPlayerState> {
+
+	// Audio URL
+	audioUrl: string = apiConfig.server + apiConfig.bookPlayer + apiConfig.isbn + "/" + apiConfig.titleId + "/" + apiConfig.orderId;
+
+	// Set the state for this component
+	state = {
+		isLoading: true,
+		isChanging: false,
+		audioBook: initializeBook(),
+		chapterList: [], 
+		rate: 1, 
+		paused: true,
+		totalLength: 1,
+		currentPosition: 0,
+		selectedChapter: 0,
+		volume: 1,
+		duration: 0.0,
+		currentTime: 0.0,
+		controls: false
+	}
 
 	// Navigation options for moving between screens from the main app
 	// TODO: Change the title to the title of the book	
@@ -104,25 +120,29 @@ export default class FullPlayer extends Component {
 	// Fetch the purhchased book using the url
 	fetchJSONAsync = async(audiobookUrl) => {
 		try {
-			const resp = await axios.get(audiobookUrl);
+			const response: AudioBookResponse = await axios.get(audiobookUrl);
 			console.log("Axis Response:");
-			console.log(resp.data);
+			console.log(response.data);
 			console.log("\n");
 		
-			// TODO Append the spaces with %20 fill in for audio files to run
-			const audioList = resp.data.audioBook.audio_list;	
-			const audioLen = audioList.length; 
-			console.log("Audio len = " + audioLen);
-			for (var i = 0; i < audioLen; i++) {
-				var audio = audioList[i].AUDIO_LOC;
+			// Create 
+			const audioBook = response.data.book;
+			const chapterList = response.data.chapterList;	
+			const numChapters = chapterList.length; 
+			console.log("Number of chapters = " + numChapters);
+
+			// Append the spaces with %20 fill in for audio files to run
+			for (var i = 0; i < numChapters; i++) {
+				var audio = chapterList[i].AUDIO_LOC;
 				var encode = audio.replace(/ /g, "%20");
-				audioList[i].AUDIO_LOC = encode;
+				chapterList[i].AUDIO_LOC = encode;
 			}
 
+			// Set state for the loaded audio book
 			this.setState({
 				isLoading: false,
-				dataSource: resp.data.audioBook,
-				chapterList: audioList 
+				audioBook: audioBook,
+				chapterList: chapterList 
 			});
 		} catch(err) {
 			console.error(err);
@@ -173,7 +193,7 @@ export default class FullPlayer extends Component {
   }
 
   seek(time) {
-    time = Math.round(time);
+	time = Math.round(time);
     this.refs.audioElement && this.refs.audioElement.seek(time);
     this.setState({
       currentPosition: time,
@@ -219,8 +239,8 @@ export default class FullPlayer extends Component {
 
 
   render() {
-	  const dataSource = this.state.dataSource;
-	  const chapter = this.state.chapterList[this.state.selectedChapter];
+	  const audioBook: Book = this.state.audioBook;
+	  const chapter: Chapter = this.state.chapterList[this.state.selectedChapter];
 
 	  console.log("Selectd chapter = " + this.state.selectedChapter);
 	  console.log("Chapter:");
@@ -234,17 +254,12 @@ export default class FullPlayer extends Component {
 			  </SafeAreaView>
 		  )
 	  }
-		
-	  /*	  
-	  */
-	
+
 	/*
 	 * Play the audio in the background requires:
 	 * 		playInBackground=true	
 	 *		ignoreSilentSwitch="ignore"	
 	 */
-        //<Header message="Playing From Charts" />
-	//dataSource.photo_loc
         //<AlbumArt url={"/Users/alejandrogonzales/Development/MyProjects/React-Native/ReactMusic/img/migueloutlaw.jpg"}/>
 	console.log("Chapter list length = " + this.state.chapterList.length);	
 	console.log("Audio loc = " + chapter.AUDIO_LOC);
