@@ -9,6 +9,14 @@ import { createStackNavigator } from 'react-navigation-stack';
 
 // Custom screen imports
 import Home from './src/screens/Home';
+import LogoTitle from './src/screens/LogoTitle';
+import { Icon } from 'react-native-elements';
+import {
+	Platform,
+	Dimensions,
+	TouchableOpacity
+} from 'react-native';
+
 // import ChapterListModal from './src/screens/AudioPlayer/ChapterListModal';
 // import FullPlayer from './src/screens/AudioPlayer/FullPlayer';
 
@@ -20,6 +28,7 @@ import PlayerControlContainer from './src/containers/PlayerControlContainer';
 // Props import for the audiobook and stack navigation
 import { AudioBookProps } from './src/interfaces/props/AudioBookProps';
 import { StackNavProps } from './src/interfaces/props/StackNavProps';
+import FullPlayer from './src/screens/AudioPlayer/FullPlayer';
 
 // Create instances of the LibraryContainer and PlayerControlContainer to be injected
 // by the Provider to multiple screens and components
@@ -43,10 +52,10 @@ export default class App extends Component {
 		return (
 		<Provider inject={[libraryContainer, playerControlContainer]}>
 			<Subscribe to={[LibraryContainer, PlayerControlContainer]}>
-				{(libraryContainer, playerControlContainer) => (
+				{(libraryContainer: LibraryContainer, playerControlContainer: PlayerControlContainer) => (
 					<StackNav {...this.props}
 						libraryContainer={libraryContainer}
-						playerControlContainer={playerControlContainer}
+						playerControlContainer={playerControlContainer} 
 					/>	
 				)}
 			</Subscribe>
@@ -62,23 +71,79 @@ export class StackNav extends Component<AudioBookProps, any> {
 	}
 
 	// Main stack for controlling the entire navigation stack for the app
-	// Each screen in the stack will get its own Store depending on what it subscribes to	
+	// Each screen in the stack will get its own Store depending on what it subscribes to
+	/*
+	navigationOptions: {
+		tabBarLabel: 'Abantu Audio',
+	},
+	*/
 	MainStack = createStackNavigator({
 		Home: {
-			screen: (props: StackNavProps) => 
+			screen: (props: StackNavProps) => (
 				<Home
 					{...props} 
 					libraryContainer={this.props.libraryContainer}
 					playerControlContainer={this.props.playerControlContainer}
 				/>
+			),
+			navigationOptions: ({navigation}) => ({
+				headerTitle: () => <LogoTitle/>,
+				gesturesEnabled: false,	
+				headerBackTitleVisible: false,	
+				headerLeft: () =>
+					<Icon
+						containerStyle={{paddingLeft:20, paddingTop: 5}}
+						type="ionicon"
+						name={Platform.OS === "ios" ? "ios-contact" : "md-contact"}
+					/>,
+				headerRight: () =>
+					<Icon
+						containerStyle={{paddingRight:20, paddingTop: 5}}
+						type="ionicon"
+						name={Platform.OS === "ios" ? "ios-search" : "md-searchs"}
+					/>	
+			}),
 		},
 		FullPlayer: {
-			screen: (props: StackNavProps) => 
+			screen: (props: StackNavProps) => (
 				<FullPlayer
 					{...props} 
 					libraryContainer={this.props.libraryContainer}
 					playerControlContainer={this.props.playerControlContainer}
 				/>
+			),
+			navigationOptions: ({ navigation }) => {
+					//headerLeftContainerStyle: {paddingLeft: 20},	
+					//name={Platform.OS === "ios" ? "ios-down-arrow" : "md-down-arrow"}
+				return {
+					title: navigation.getParam('bookTitle', 'Full Player'),
+					gesturesEnabled: false,	
+					headerBackTitleVisible: false,	
+					headerTitleStyle: { color: 'black', fontSize: 14, width : Dimensions.get('window').width/1.6, textAlign: 'center'},	
+					headerStyle: { backgroundColor: 'white' },
+					headerTintColor: 'black',
+					headerLeft: () =>
+						<TouchableOpacity onPress={() => navigation.goBack()}>	
+						<Icon 
+							containerStyle={{paddingLeft:20, paddingTop: 5}}
+							type="material"
+							color='black'	
+							size={30}
+							name="keyboard-arrow-down"	
+						/>	
+						</TouchableOpacity>,
+					headerRight: () =>
+						<TouchableOpacity> 
+						<Icon 
+							containerStyle={{paddingRight:20, paddingTop: 0}}
+							type="material"
+							color='black'	
+							size={30}
+							name="more-vert"	
+						/>
+						</TouchableOpacity>,
+				};
+			}
 		}, 
 	}, {
 		initialRouteParams: Home,
@@ -91,32 +156,9 @@ export class StackNav extends Component<AudioBookProps, any> {
 			headerTintColor: '#fff',
 			headerTitleStyle: {
 				color: 'black',	
-				fontWeight: 'bold',
 			},
-		},
-		navigationOptions: {
-			tabBarLabel: 'Home'
 		},
 	});
-
-	// Root stack for the audio player to the chapter list modal
-	// We can hae multiple root stacks for each page with modals
-	/*	
-	RootStack = createStackNavigator(
-		{
-			Main: {
-				screen: MainStack,
-			},
-			ChaptersModal: {
-				screen: ChapterListModal, 
-			}
-		},
-		{
-			headerMode: 'none',
-			mode: 'modal',
-		}
-	);
-	*/
 
 	// Create the AppContainer from the main stack navigation
 	AppContainer = createAppContainer(this.MainStack);

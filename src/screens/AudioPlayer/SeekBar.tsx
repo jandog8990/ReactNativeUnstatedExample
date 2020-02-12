@@ -17,7 +17,7 @@ import Slider from 'react-native-slider';
 
 function pad(n, width, z=0) {
   n = n + '';
-  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+  return n.length >= width ? n : new Array(width - n.length + 1).join(String(z)) + n;
 }
 
 const minutesAndSeconds = (position) => ([
@@ -48,6 +48,7 @@ const SeekBar = ({
         maximumValue={Math.max(chapterLength, 1, currentPosition + 1)}
         onSlidingStart={onSlidingStart}
         onSlidingComplete={onSeek}
+        onValueChange={() => console.log("Value changed!")}
         value={currentPosition}
         style={styles.slider}
         minimumTrackTintColor='purple'

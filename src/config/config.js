@@ -4,7 +4,7 @@
  * the OrderId and other temporary ISBN book info
  */
 export const apiConfig = {
-    "baseUrl": "https://8fb80035.ngrok.io",
+    "baseUrl": "https://4648d4e0.ngrok.io",
     "genres": "/android/genres/",
     "bookPlayer": "/android/books/player/",
     "purchasedBooks": "/android/purchased-books/",

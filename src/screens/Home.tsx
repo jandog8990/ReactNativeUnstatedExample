@@ -9,10 +9,7 @@
  */
 
 import React, { Component } from 'react';
-import { Platform } from 'react-native';
-import { Icon } from 'react-native-elements';
 //import Routes from "./Routes";
-import LogoTitle from './LogoTitle';
 
 import axios from 'react-native-axios';
 import {
@@ -44,6 +41,7 @@ import { StackNavProps } from '../interfaces/props/StackNavProps';
 import { GenreResponse } from 'src/interfaces/network/GenreResponse';
 import { Genre } from 'src/interfaces/models/Genre';
 import { Book } from 'src/interfaces/models/Book';
+import { apiConfig } from '../config/config';
 
 // Combine the audio book and navigation props
 interface HomeProps extends AudioBookProps, StackNavProps {};
@@ -55,6 +53,7 @@ interface HomeState {
 }
 
 export default class Home extends Component<HomeProps, HomeState> {
+	navigation = this.props.navigation;
 
 	// State of the Home component
 	state: HomeState = {
@@ -63,27 +62,8 @@ export default class Home extends Component<HomeProps, HomeState> {
 	}
 
 	// Server and route will come from a config service LOLz (where's Todd??)
-	server = 'https://8fb80035.ngrok.io';
-	route = '/android/genres/';
-	
-	// Navigation options for the top header
-	static navigationOptions = {
-		headerTitle: () => <LogoTitle/>,
-		gesturesEnabled: false,	
-		headerBackTitleVisible: false,	
-		headerLeft: () =>
-			<Icon
-				containerStyle={{paddingLeft:20, paddingTop: 5}}
-				type="ionicon"
-				name={Platform.OS === "ios" ? "ios-contact" : "md-contact"}
-			/>,
-		headerRight: () =>
-			<Icon
-				containerStyle={{paddingRight:20, paddingTop: 5}}
-				type="ionicon"
-				name={Platform.OS === "ios" ? "ios-search" : "md-searchs"}
-			/>	
-	};
+	server = apiConfig.baseUrl;
+	route = apiConfig.genres;
 
   fetchJSONAsync = async(urlArr: string[]) => {
 	  let requests: Genre[] = new Array(); 

@@ -15,15 +15,17 @@ import {
 import { Icon } from 'react-native-elements';
 
 //style={[{tintColor: 'purple'}]}
+/*
+onPressShuffle,
+onPressRepeat,
+*/
 const Controls = ({
-  paused,
+  forwardDisabled,
   onPressPlay,
   onPressPause,
   onBack,
   onForward,
-  onPressShuffle,
-  onPressRepeat,
-  forwardDisabled,
+  paused
 }) => (
   <View style={styles.container}>
     <TouchableOpacity onPress={onBack}> 

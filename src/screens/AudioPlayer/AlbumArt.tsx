@@ -15,17 +15,19 @@ import {
   Dimensions,
 } from 'react-native';
 
+/*
+onPress
+<TouchableOpacity onPress={onPress}>
+</TouchableOpacity>
+*/
 const AlbumArt = ({
   url,
-  onPress
 }) => (
   <View style={styles.container}>
-    <TouchableOpacity onPress={onPress}>
-      <Image
-        style={styles.image}
-        source={{uri: url}}
-      />
-    </TouchableOpacity>
+    <Image
+      style={styles.image}
+      source={{uri: url}}
+    />
   </View>
 );
 
@@ -41,9 +43,10 @@ height = height - 420;
 const styles = StyleSheet.create({
   container: {
    	justifyContent: 'center',	
-	alignItems: 'center', 
+	  alignItems: 'center', 
     paddingLeft: 12,
     paddingRight: 12,
+    paddingTop: 20
   },
   image: {
 	width: 275,
