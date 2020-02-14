@@ -22,73 +22,33 @@ import SeekBar from './SeekBar';
 import Controls from './Controls';
 import Video from 'react-native-video';
 
-// Custom objects and models from other TypeScript files
-import { AudioBookProps } from '../../interfaces/props/AudioBookProps';
-import { StackNavProps } from '../../interfaces/props/StackNavProps';
-import { Chapter } from '../../interfaces/models/Chapter';
-import { Book, initializeBook } from '../../interfaces/models/Book';
-
-// Combine audio book and navigation props
-interface FullPlayerProps extends AudioBookProps, StackNavProps {};
+import PlayerController from '../../controllers/PlayerController';
 
 // Import the API configuration for hitting certain endpoints
 import { apiConfig } from '../../config/config';
 import { AudioBookResponse } from 'src/interfaces/network/AudioBookResponse';
 
-// Initialize the Full player State
-interface FullPlayerState {
-	isLoading: boolean,
-	isChanging: boolean,
-	audioBook: Book,
-	chapterList: Chapter[], 
-	rate: number, 
-	paused: boolean,
-	ended: boolean,
-	totalLength: number,
-	currentPosition: number,
-	selectedChapter: number,
-	volume: number,
-	duration: number,
-	currentTime: number,
-	controls: boolean
-  }
+export default class FullPlayer extends PlayerController {
 
-export default class FullPlayer extends Component<FullPlayerProps, FullPlayerState> {
-
-	// Initilize the videoPlayer
+	// Initilize the audio player
+	// TODO Think of how we will pass the audio player across multiple classes
+	// and also how to share code from the PlayerController
 	audioPlayer;
 	navigation = this.props.navigation;
 
 	// Audio URL
 	audioUrl: string = apiConfig.baseUrl + apiConfig.bookPlayer + apiConfig.isbn + "/" + apiConfig.titleId + "/" + apiConfig.orderId;
 
-	// Set the state for this component
-	state = {
-		isLoading: true,
-		isChanging: false,
-		audioBook: initializeBook(),
-		chapterList: [], 
-		rate: 1, 
-		paused: true,
-		ended: false,
-		totalLength: 1,
-		currentPosition: 0,
-		selectedChapter: 0,
-		volume: 1,
-		duration: 0.0,
-		currentTime: 0.0,
-		controls: false
-	}
-
 	// Component mounted => query the database for the audiobook
 	componentDidMount() {
 		console.log("Component did MOUNT!");
 		console.log("Fetch url = " + this.audioUrl);	
-		this.fetchJSONAsync(this.audioUrl);	
+		this.fetchJSONAsync(this.audioUrl);
 	}
 
 	// Fetch the purhchased book using the url
 	fetchJSONAsync = async(audiobookUrl) => {
+		this.props.playerControlContainer;
 		try {
 			const response: AudioBookResponse = await axios.get(audiobookUrl);
 			console.log("Axis Response:");
