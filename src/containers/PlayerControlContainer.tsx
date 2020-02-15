@@ -8,12 +8,13 @@ interface PlayerControlState {
     chapterMap: Map<number, Chapter[]>,
     chapterIndex: number,
     paused: boolean,
+    ended: boolean,
     currentTime: number
 }
 
 /**
- * Contains all of the actions for the player control
- * such as play, pause, next song, previous, etc...
+ * Contains all of the actions for the player control such as play, pause, next song, previous, etc...
+ * NOTE: These are the global states for both the FullPlayer and the embedded MusicControl
  */
 export default class PlayerControlContainer extends Container<PlayerControlState> {
     state: PlayerControlState = {
@@ -21,7 +22,8 @@ export default class PlayerControlContainer extends Container<PlayerControlState
         chapterMap: new Map<number, Chapter[]>(),
         chapterIndex: -1,
         paused: true,
-        currentTime: 0
+        ended: false,
+        currentTime: 0.0
     }
 
     // TODO: See the FullPlayer.tsx file for actions and state 
@@ -44,6 +46,13 @@ export default class PlayerControlContainer extends Container<PlayerControlState
             paused: false,
             currentTime: 0.0
         })
+    }
+
+    // Set the book ended boolean when we finish audio
+    setBookEnded = (ended) => {
+        this.setState({
+            ended: ended
+        });
     }
 
     // Set the current Chapter using index from the action (back, next, current)

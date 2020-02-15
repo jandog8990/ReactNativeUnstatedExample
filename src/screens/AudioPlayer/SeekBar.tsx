@@ -25,14 +25,18 @@ const minutesAndSeconds = (position) => ([
   pad(position % 60, 2),
 ]);
 
+/**
+ * SeekBar for the main full player allows fwd and rwd of audio
+ * @param 
+ */
 const SeekBar = ({
-  chapterLength,
+  chapterDuration,
   currentPosition,
   onSeek,
   onSlidingStart,
 }) => {
   const elapsed = minutesAndSeconds(currentPosition);
-  const remaining = minutesAndSeconds(chapterLength - currentPosition);
+  const remaining = minutesAndSeconds(chapterDuration - currentPosition);
   return (
     <View style={styles.container}>
       <View style={{flexDirection: 'row'}}>
@@ -41,11 +45,11 @@ const SeekBar = ({
         </Text>
         <View style={{flex: 1}} />
         <Text style={[styles.text, {width: 40}]}>
-          {chapterLength > 1 && "-" + remaining[0] + ":" + remaining[1]}
+          {chapterDuration > 1 && "-" + remaining[0] + ":" + remaining[1]}
         </Text>
       </View>
       <Slider
-        maximumValue={Math.max(chapterLength, 1, currentPosition + 1)}
+        maximumValue={Math.max(chapterDuration, 1, currentPosition + 1)}
         onSlidingStart={onSlidingStart}
         onSlidingComplete={onSeek}
         onValueChange={() => console.log("Value changed!")}

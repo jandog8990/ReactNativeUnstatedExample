@@ -28,7 +28,8 @@ public class MainApplication extends Application implements ReactApplication {
           // packages.add(new MyReactNativePackage());
           packages.addAll(Arrays.asList(
 					  new MainReactPackage(),
-					  new ReactVideoPackage()));
+					  new ReactVideoPackage(),
+					  new MusicControl()));
 		  return packages;
         }
 

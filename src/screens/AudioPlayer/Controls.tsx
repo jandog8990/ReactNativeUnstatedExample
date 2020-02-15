@@ -14,11 +14,11 @@ import {
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 
-//style={[{tintColor: 'purple'}]}
-/*
-onPressShuffle,
-onPressRepeat,
-*/
+/**
+ * Controls for user actions (i.e. pause, play) for the main FullPlayer
+ * @param
+ */
+// TODO: Look for ways of disabling the forward button
 const Controls = ({
   forwardDisabled,
   onPressPlay,
@@ -30,18 +30,18 @@ const Controls = ({
   <View style={styles.container}>
     <TouchableOpacity onPress={onBack}> 
    	  <Icon 
-		color="purple"	
-		type="material"
-		size={38}
-		name="skip-previous" />
-	</TouchableOpacity>
+		    color="purple"	
+		    type="material"
+        size={38}
+        name="skip-previous" />
+	  </TouchableOpacity>
     <View style={{width: 20}} />
     <TouchableOpacity onPress={onBack}>
-   	  <Icon 
-		color="purple"	
-		type="material"
-		size={44}
-		name="replay-30" />
+      <Icon 
+        color="purple"	
+        type="material"
+        size={44}
+        name="replay-30" />
     </TouchableOpacity>
     <View style={{width: 20}} />
     {!paused ?
@@ -59,18 +59,18 @@ const Controls = ({
     <View style={{width: 20}} />
     <TouchableOpacity onPress={onForward}>
    	  <Icon 
-		color="purple"	
-		type="material"
-		size={44}
-		name="forward-30" />
+        color="purple"	
+        type="material"
+        size={44}
+        name="forward-30" />
     </TouchableOpacity>
     <View style={{width: 20}} />
     <TouchableOpacity onPress={onForward}>
    	  <Icon 
-		color="purple"	
-		type="material"
-		size={38}
-		name="skip-next" />
+        color="purple"	
+        type="material"
+        size={38}
+        name="skip-next" />
     </TouchableOpacity>
   </View>
 );

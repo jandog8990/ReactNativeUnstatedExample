@@ -15,11 +15,11 @@ import {
   Dimensions,
 } from 'react-native';
 
-/*
-onPress
-<TouchableOpacity onPress={onPress}>
-</TouchableOpacity>
-*/
+/**
+ * Album art for the current chapter (this should be the same for an entire book)
+ * However, there will be exceptions when using Michael's poetry, where each poem will have art
+ * @param 
+ */
 const AlbumArt = ({
   url,
 }) => (
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     paddingTop: 20
   },
   image: {
-	width: 275,
-	height: 417,
+    width: 275,
+    height: 417,
   },
 })

@@ -27,6 +27,7 @@ import PlayerController from '../../controllers/PlayerController';
 // Import the API configuration for hitting certain endpoints
 import { apiConfig } from '../../config/config';
 import { AudioBookResponse } from 'src/interfaces/network/AudioBookResponse';
+import { Chapter } from 'src/interfaces/models/Chapter';
 
 export default class FullPlayer extends PlayerController {
 
@@ -40,15 +41,16 @@ export default class FullPlayer extends PlayerController {
 	audioUrl: string = apiConfig.baseUrl + apiConfig.bookPlayer + apiConfig.isbn + "/" + apiConfig.titleId + "/" + apiConfig.orderId;
 
 	// Component mounted => query the database for the audiobook
+	// TODO: The url and book info should be retrieved from the navigation props from previous page
 	componentDidMount() {
+		// Build the URL based on the ISBN, SEARCH_ID and ORDER_ID from the Book object
 		console.log("Component did MOUNT!");
-		console.log("Fetch url = " + this.audioUrl);	
+		console.log("Fetch url = " + this.audioUrl);
 		this.fetchJSONAsync(this.audioUrl);
 	}
 
-	// Fetch the purhchased book using the url
+	// Fetch the purhchased book using the url provided in the Library component
 	fetchJSONAsync = async(audiobookUrl) => {
-		this.props.playerControlContainer;
 		try {
 			const response: AudioBookResponse = await axios.get(audiobookUrl);
 			console.log("Axis Response:");
@@ -79,19 +81,23 @@ export default class FullPlayer extends PlayerController {
 		}
 	}
 
-	// Load of the original book player (original load)
-	onLoad = (data) => {
-		console.log("On Load Fired (data)!");
-		console.log(this.state.selectedChapter);	
-		console.log(data);	
-		console.log(data.target);
-		console.log("\n");
-
-		this.setState({ duration: data.target });
+	// Forward disabled if the index equals the number of chapters (end of book)
+	onForwardDisabled = (data) => {
+		// does this return a boolean to disable the FWD button?
+		const { chapterIndex } = this.props.playerControlContainer.state;
+		const chapterList = this.state.chapterList;
+		return chapterIndex === chapterList.length - 1;
 	}
 
-	// Load start of the player (load and start occurs after onLoad)
-	// onLoadStart = (data) => this.setState({ isLoading: true });
+	// Play method for playing the chapters
+	onPlay = (data) => {
+		console.log("On Press Play(data)!");
+		console.log("data duration = " + data.duration);
+
+		// this.setState({paused: false});
+		// this.setState({duration: data.duration});
+		this.playCurrentChapter();
+	}
 
 	// Tracks the progress of the player
 	onProgress = (data) => {
@@ -103,105 +109,101 @@ export default class FullPlayer extends PlayerController {
 		console.log("\n");
 
 		if (!this.state.isLoading) {
-			this.setState({currentTime: data.currentTime});
-			// this.setState({currentPosition: Math.floor(data.currentTime)});
+			// this.setState({currentTime: data.currentTime});
+
+			this.updatePlayTime(data.currentTime);
 		}
 	}
 
-	// Play method for playing the chapters
-	onPlay = (data) => {
-		console.log("On Press Play(data)!");
-		console.log("data duration = " + data.duration);
-
-		this.setState({paused: false});
-		this.setState({duration: data.duration});
-	}
-
 	// End method for for the player ending
-	onEnd = (data) => {
-		this.setState({ ended: true });
+	onEnd = () => {
+		this.setBookEnded(true);
 	}
 
 	// Handle error from the video
 	onError = (error) => console.log("Audio player error occurred: " + error);
 
-	setDuration = (data) => {
+	// On seek method for ffw and rwd
+	onSeek = (time) => {
+		time = Math.round(time);
+
+		// this.audioPlayer && this.audioPlayer.seek(time);
+		this.audioPlayer.seek(time);
+
+		// this.setState({ currentPosition: time, paused: false });
+
+		// Set the current position
+		this.setCurrentPosition(time);
+
+		// Set the paused to false (play)
+		this.setPaused(false);
+	}
+
+	// On pause from the pause button and also the slider
+	onPause = () => {
+		console.log("On Press Pause(data)!");
+
+		// this.setState({ paused: true });
+		this.setPaused(true);
+	}
+
+	onBack = () => {
+
+		// Always seek to the beginning of the audio player then go to previous chapter
+		this.audioPlayer && this.audioPlayer.seek(0);
+
+		// Play the previous chapter using PlayerController
+		this.playPreviousChapter();
+	}
+
+	onForward = () => {
+
+		// Seek to the beginning of the AudioPlayer
+		this.audioPlayer && this.audioPlayer.seek(0);
+
+		// Play the next chapter using PlayerController
+		this.playNextChapter();
+	}
+
+	/**
+	 * Update methods for updating the current state of the player
+	 */
+
+	// Upade the chapter duration with the current chapter
+	updateDuration = (data) => {
 		console.log("Set Duration (data):"); 
 		console.log(data.duration);
 		console.log("\n");
 
-		this.setState({totalLength: Math.floor(data.duration)});
+		// this.setState({chapterDuration: Math.floor(data.duration)});
+		this.setChapterDuration(Math.floor(data.duration));
 	}
 
-	setTime = (data) => {
+	// Set the current position of the chapter using current time
+	updateCurrentPosition = (data) => {
 		console.log("Set Time:"); 
 		console.log(data.currentTime);
 		console.log("\n");
 
-		this.setState({currentPosition: Math.floor(data.currentTime)});
-	}
-
-	// On seek method for ffw and rwd
-	onSeek = (time) => {
-		time = Math.round(time);
-		// this.audioPlayer && this.audioPlayer.seek(time);
-		this.audioPlayer.seek(time);
-		this.setState({
-			currentPosition: time,
-			paused: false,
-		});
-	}
-
-	onPause = (data) => {
-		console.log("On Press Pause(data)!");
-		this.setState({ paused: true });
-	}
-
-	onBack = () => {
-		console.log("On Back:");
-		
-		if (this.state.currentPosition < 10 && this.state.selectedChapter > 0) {
-			this.audioPlayer && this.audioPlayer.seek(0);
-			this.setState({ isChanging: true });
-			setTimeout(() => this.setState({
-				currentPosition: 0,
-				paused: false,
-				totalLength: 1,
-				isChanging: false,
-				selectedChapter: this.state.selectedChapter - 1,
-			}), 0);
-		} else {
-			this.audioPlayer.seek(0);
-			this.setState({
-				currentPosition: 0,
-			});
-		}
-	}
-
-	onForward = () => {
-		if (this.state.selectedChapter < this.state.chapterList.length - 1) {
-		this.audioPlayer && this.audioPlayer.seek(0);
-		this.setState({ isChanging: true });
-		setTimeout(() => this.setState({
-			currentPosition: 0,
-			totalLength: 1,
-			paused: false,
-			isChanging: false,
-			selectedChapter: this.state.selectedChapter + 1,
-		}), 0);
-		}
+		// this.setState({currentPosition: Math.floor(data.currentTime)});
+		this.setCurrentPosition(Math.floor(data.currentTime));
 	}
 
   	render() {
-		const audioBook: Book = this.state.audioBook;
-		const chapter: Chapter = this.state.chapterList[this.state.selectedChapter];
+		// Import the global states from the states and props
+		const { isLoading, chapterList, rate, currentPosition, chapterDuration } = this.state;
+		const { paused, chapterIndex } = this.props.playerControlContainer.state;
 
-		console.log("Selectd chapter = " + this.state.selectedChapter);
+		// Initialize the chapter from the global state chapter index
+		const chapter: Chapter = chapterList[chapterIndex];
+
+		console.log("Selectd chpater index = " + chapterIndex);
 		console.log("Chapter:");
 		console.log(chapter);
 		console.log("\n");
 
-		if (this.state.isLoading) {
+		// Is loading state from the main player controller containers
+		if (isLoading) {
 			return(
 				<SafeAreaView style={{flex:1, paddingTop:40}}>
 					<ActivityIndicator/>
@@ -216,7 +218,7 @@ export default class FullPlayer extends PlayerController {
 		*/
 			//<AlbumArt url={"/Users/alejandrogonzales/Development/MyProjects/React-Native/ReactMusic/img/migueloutlaw.jpg"}/>
 			// onLoadStart={this.onLoadStart} // Callback when video starts to load
-		console.log("Chapter list length = " + this.state.chapterList.length);	
+		console.log("Chapter list length = " + chapterList.length);	
 		console.log("Audio loc = " + chapter.AUDIO_LOC);
 		console.log("Photo loc = " + chapter.PHOTO_LOC);	
 		console.log("\n");
@@ -229,12 +231,12 @@ export default class FullPlayer extends PlayerController {
 				playWhenInactive={true}	
 				ignoreSilentSwitch="ignore"	
 				style={styles.audioElement}
-				paused={this.state.paused}
-				onLoad={this.setDuration} // Callback when video loads
-				onProgress={this.setTime} // Callback every ~250ms with currentTime
+				paused={paused}
+				onLoad={this.updateDuration} // Callback when video loads
+				onProgress={this.updateCurrentPosition} // Callback every ~250ms with current position using time
 				onEnd={this.onEnd} 
 				resizeMode="cover"
-				rate={this.state.rate}
+				rate={rate}
 				onError={this.onError} // Callback when video cannot be loaded
 				fullscreen={false}
 			/>
@@ -242,17 +244,17 @@ export default class FullPlayer extends PlayerController {
 			<AlbumArt url={chapter.PHOTO_LOC} />
 			<ChapterDetails title={chapter.TITLE} /> 
 			<SeekBar
+				chapterDuration={chapterDuration}
+				currentPosition={currentPosition}
 				onSeek={this.onSeek}
-				chapterLength={this.state.totalLength}
-				onSlidingStart={() => this.setState({paused: true})}
-				currentPosition={this.state.currentPosition} />
+				onSlidingStart={this.onPause} />
 			<Controls
-				forwardDisabled={this.state.selectedChapter === this.state.chapterList.length - 1}
+				forwardDisabled={this.onForwardDisabled}
 				onPressPlay={this.onPlay} 
 				onPressPause={this.onPause}
 				onBack={this.onBack}
 				onForward={this.onForward}
-				paused={this.state.paused}/>
+				paused={paused}/>
 			<View>
 			<TouchableOpacity> 
 				<View style={styles.chapterButton}> 
@@ -263,7 +265,7 @@ export default class FullPlayer extends PlayerController {
 			</View>
 		</SafeAreaView>
 		);
-  	}
+	}
 }
 
    // tintColor: 'black',

@@ -183,6 +183,8 @@ PODS:
     - React-cxxreact (= 0.61.2)
     - React-jsi (= 0.61.2)
   - React-jsinspector (0.61.2)
+  - react-native-music-control (0.10.8):
+    - React
   - react-native-safe-area-context (0.6.4):
     - React
   - react-native-video/Video (5.0.2):
@@ -257,6 +259,7 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
+  - react-native-music-control (from `../node_modules/react-native-music-control`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-video/VideoCaching (from `../node_modules/react-native-video/react-native-video.podspec`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -312,6 +315,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-music-control:
+    :path: "../node_modules/react-native-music-control"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-video:
@@ -366,6 +371,7 @@ SPEC CHECKSUMS:
   React-jsi: 32285a21b1b24c36060493ed3057a34677d58d09
   React-jsiexecutor: 8909917ff7d8f21a57e443a866fd8d4560e50c65
   React-jsinspector: 111d7d342b07a904c400592e02a2b958f1098b60
+  react-native-music-control: 2de793e824b7849814fd4ffb9688fc7cc7cd5a71
   react-native-safe-area-context: 042dfc9d4db17196841df962ba9497f6e7a5bd02
   react-native-video: 961749da457e73bf0b5565edfbaffc25abfb8974
   React-RCTActionSheet: 89b037c0fb7d2671607cb645760164e7e0c013f6
@@ -386,6 +392,6 @@ SPEC CHECKSUMS:
   SPTPersistentCache: df36ea46762d7cf026502bbb86a8b79d0080dff4
   Yoga: 14927e37bd25376d216b150ab2a561773d57911f
 
-PODFILE CHECKSUM: ebf218c46ba5f2e58c1fb99b0f629ea8e442917f
+PODFILE CHECKSUM: 61f67bb2965712f2aaced6c5f3acd31c10944ccb
 
 COCOAPODS: 1.8.4

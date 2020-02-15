@@ -31,7 +31,7 @@ export interface Book {
 	GENRE: string
 }
 
-// Initialize the 
+// Initialize the book object for init
 export let initializeBook = (): Book => {
     return {ISBN: 0, ORDER_ID: 0, TITLE: "", PRICE: 0, SUMMARY: "",
         SEARCH_ID: "", NUM_CHAPTERS: 0, TOTAL_TIME: "", AUTHOR: "",
