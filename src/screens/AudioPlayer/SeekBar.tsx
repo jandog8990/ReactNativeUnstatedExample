@@ -15,11 +15,13 @@ import {
 
 import Slider from 'react-native-slider';
 
+// Padding for the physical position may need to be updated
 function pad(n, width, z=0) {
   n = n + '';
   return n.length >= width ? n : new Array(width - n.length + 1).join(String(z)) + n;
 }
 
+// TODO This conversion may not be working
 const minutesAndSeconds = (position) => ([
   pad(Math.floor(position / 60), 2),
   pad(position % 60, 2),

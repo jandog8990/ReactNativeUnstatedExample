@@ -51,12 +51,14 @@ export default class FullPlayer extends PlayerController {
 		this.TITLE = ChapterInfo.TITLE;
 
 		// Create bindings for the functions used in player
+		/*	
 		this.setCurrentTime = this.setCurrentTime.bind(this);
 		this.setDuration = this.setDuration.bind(this);
 		this.onSeek = this.onSeek.bind(this); 
 		this.onBack = this.onBack.bind(this); 
 		this.onForward = this.onForward.bind(this); 
-		
+		*/
+
 		// TODO May want to remove this
 		this.state = {
 			rerender: false
@@ -70,8 +72,6 @@ export default class FullPlayer extends PlayerController {
 	// TODO: The url and book info should be retrieved from the navigation props from previous page
 	componentDidMount() {
 		// Build the URL based on the ISBN, SEARCH_ID and ORDER_ID from the Book object
-		console.log("Component did MOUNT!");
-		console.log("Fetch url = " + this.audioUrl);
 		this.fetchJSONAsync(this.audioUrl);
 	}
 
@@ -123,20 +123,8 @@ export default class FullPlayer extends PlayerController {
 				chapterList[i].AUDIO_LOC = encode;
 			}
 
-			// This is async and must wait to finish before re-render
-			/*
-			// This is the old way of doing things PEACE B
-			this.setState({
-				isLoading: false,
-				audioBook: audioBook,
-				chapterList: chapterList
-			});
-			*/
-
 			// Audiobook needs to be filtered out into Book and Chapter[]
-			await this.props.playerControlContainer.foundChapters(audioBook, chapterList);
-			console.log("returned:");
-			// this.setState({rerender: true});
+			this.props.playerControlContainer.foundChapters(audioBook, chapterList);
 		} catch(err) {
 			console.error(err);
 		}
@@ -153,22 +141,14 @@ export default class FullPlayer extends PlayerController {
 	onPlay = (data) => {
 		console.log("On Press Play(data)!");
 		console.log("data duration = " + data.duration);
+		console.log("\n");
 
-		// this.setState({paused: false});
-		// this.setState({duration: data.duration});
 		this.playCurrentChapter();
 	}
 
 	// Tracks the progress of the player
 	onProgress = (data) => {
 		const { isLoading } = this.props.playerControlContainer.state;
-		console.log("On Progress (data)!");
-		console.log(data);
-		console.log("\n");
-
-		console.log("Set Time:"); 
-		console.log(data.currentTime);
-		console.log("\n");
 
 		if (!isLoading) {
 			// this.setState({currentTime: data.currentTime});
@@ -188,7 +168,7 @@ export default class FullPlayer extends PlayerController {
 
 	// On seek method for ffw and rwd
 	onSeek = (time) => {
-		time = Math.round(time);
+		time = Math.floor(time);
 
 		// this.audioPlayer && this.audioPlayer.seek(time);
 		this.audioPlayer.seek(time);
@@ -204,7 +184,6 @@ export default class FullPlayer extends PlayerController {
 
 	// On pause from the pause button and also the slider
 	onPause = () => {
-		console.log("On Press Pause(data)!");
 
 		// this.setState({ paused: true });
 		this.props.playerControlContainer.setPaused(true);
@@ -234,19 +213,13 @@ export default class FullPlayer extends PlayerController {
 
 	// Upade the chapter duration with the current chapter
 	setDuration = (data) => {
-		console.log("Set Duration (data):"); 
-		console.log(data.duration);
-		console.log("\n");
 
 		// this.setState({chapterDuration: Math.floor(data.duration)});
-		this.props.playerControlContainer.setChapterDuration(Math.floor(data.duration));
+		this.props.playerControlContainer.setTotalLength(Math.floor(data.duration));
 	}
 
 	// Set the current position of the chapter using current time
 	setCurrentTime = (data) => {
-		console.log("Set Time:"); 
-		console.log(data.currentTime);
-		console.log("\n");
 
 		// this.setState({currentPosition: Math.floor(data.currentTime)});
 		this.props.playerControlContainer.setCurrentPosition(Math.floor(data.currentTime));
@@ -259,12 +232,6 @@ export default class FullPlayer extends PlayerController {
 	*/
 
   	render() {
-		const audioBook = this.props.playerControlContainer.state.audioBook;
-		const chapterIndex = this.props.playerControlContainer.state.chapterIndex;
-		console.log("Player Control Container");
-		console.log("chapterIndex = " + chapterIndex);
-		console.log(audioBook);
-		console.log("\n");
 
 		return (
 		<Subscribe to={[PlayerControlContainer]}>

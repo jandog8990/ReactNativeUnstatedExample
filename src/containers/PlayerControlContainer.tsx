@@ -148,4 +148,9 @@ export default class PlayerControlContainer extends Container<PlayerControlState
 	setChapterDuration = (duration) => {
 		this.setState({ chapterDuration: duration });
 	}
+
+	// Set the total length of the chapter 
+	setTotalLength = (totalLength) => {
+		this.setState({ totalLength: totalLength });
+	}
 }
