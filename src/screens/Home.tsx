@@ -131,6 +131,9 @@ export default class Home extends Component<HomeProps, HomeState> {
   _renderItem(item: Book) {
 		//<TouchableOpacity  onPress={() => this.props.navigation.navigate('ShopList')}>
 		//<TouchableOpacity  onPress={() => this.props.navigation.navigate('ChaptersModal')}>
+	console.log("Render Item:");
+	console.log(item);
+	console.log("\n");
     return (
 		<TouchableOpacity onPress={() => {
 			this.props.navigation.navigate('FullPlayer', {bookTitle: item.TITLE})}}>

@@ -3,13 +3,20 @@ import { Book, initializeBook } from '../interfaces/models/Book';
 import { Chapter } from 'src/interfaces/models/Chapter';
 
 // Player control states for interacting with player
+    // book: Book,
+	// isChanging: boolean,
 interface PlayerControlState {
-    book: Book,
-    chapterMap: Map<number, Chapter[]>,
-    chapterIndex: number,
+	audioBook: Book,
+	chapterList: Chapter[], 
+	rate: number, 
     paused: boolean,
     ended: boolean,
-    currentTime: number
+    totalLength: number, 
+    currentTime: number,
+	currentPosition: number,
+	chapterDuration: number,
+    chapterIndex: number,
+    isLoading: boolean,
 }
 
 /**
@@ -20,19 +27,66 @@ export default class PlayerControlContainer extends Container<PlayerControlState
     state: PlayerControlState = {
         book: initializeBook(),
         chapterMap: new Map<number, Chapter[]>(),
-        chapterIndex: -1,
+        chapterIndex: 0,
         paused: true,
         ended: false,
-        currentTime: 0.0
+        currentTime: 0.0,
+        isLoading: true,
+		isChanging: false,
+		audioBook: initializeBook(),
+		chapterList: [], 
+		rate: 1, 
+		currentPosition: 0,
+		chapterDuration: 0.0
     }
 
     // TODO: See the FullPlayer.tsx file for actions and state 
     
     // Found chapters to the selected book (when user selects book from library)
     // This should issue a query to the database for the Chapter list using ISBN
-	foundChapters = (book: Book, chapterList: Chapter[]) => {
-		const chapterMap = {...this.state.chapterMap};
-		chapterMap.set(book.ISBN, chapterList);
+	foundChapters = (newLoading: boolean, newBook: Book, newChapterList: Chapter[]) => {
+		// const chapterMap = {...this.state.chapterMap};
+        // chapterMap.set(audioBook.ISBN, chapterList);
+        // this.state.chapterMap[audioBook.ISBN] = chapterList;
+        // let chapterMap = new Map<number, Chapter[]>();
+        const newChapterMap = new Map<number, Chapter[]>(this.state.chapterMap);
+        // chapterMap.set(audioBook.ISBN, chapterList);
+        newChapterMap[newBook.ISBN] = newChapterList;
+
+        // let oldBook = {...}
+
+        console.log("Chapter Map:");
+        console.log(newChapterMap);
+        console.log("\n");
+        
+        // audioBook: audioBook
+        // const audioBook
+        //const dbBook = {...this.state.audioBook, ...newBook};
+
+        /*
+        this.setState(prevState => ({
+            audioBook: {
+                ...prevState.audioBook,
+                ISBN: newBook.ISBN
+            }
+        }));
+        */
+    //    delete this.state.audioBook;
+    console.log("PlayerControlContainer: setState()!");
+    this.setState({
+           isLoading: newLoading, 
+           audioBook: newBook, 
+           chapterList: newChapterList,
+           chapterMap: newChapterMap
+       });
+       /*
+       () => {
+           console.log("Updated State:");
+           console.log(this.state);
+           console.log("\n");
+           return {...this.state };
+       });
+       */
 	}
 
     // Play book is updated from the last book. Sets:
@@ -40,78 +94,89 @@ export default class PlayerControlContainer extends Container<PlayerControlState
     // 2. foundChapters() method in LibraryContainer
     // 3. setChapterIndex -> playCurrentChpater
     playingBook = (book: Book) => {
-        // Set the state for the current Book
+        // Set the state for the current Book 
+        // setting paused to true => play chapter will set to true
         this.setState({
             book: book,
-            paused: false,
+            paused: true,
             currentTime: 0.0
+        })
+    }
+
+    // Playing current chapter sets the states for the current play
+    playingCurrentChapter = (duration: number, paused: boolean) => {
+        this.setState({
+            chapterDuration: duration,
+            paused: paused
+        })
+    }
+
+    // Playing the queued chapter (previous/next actions)
+    playingQueuedChapter = (isChanging: boolean, position: number) => {
+        this.setState({
+            isChanging: isChanging,
+            currentPosition: position
         })
     }
 
     // Set the book ended boolean when we finish audio
     setBookEnded = (ended) => {
-        this.setState({
-            ended: ended
-        });
+        this.setState({ ended: ended });
     }
 
     // Set the current Chapter using index from the action (back, next, current)
     setCurrentChapter = (index) => {
-        this.setState({
-            chapterIndex: index
-        });
+        this.setState({ chapterIndex: index });
     }
 
     // Set the current Chapter to paused or not paused
     setPaused = (paused) => {
-        this.setState({
-            paused: paused
-        });
+        this.setState({ paused: paused });
     }
 
     // Set the current play time of the current chapter
-    setPlayTime = (currentTime) => {
-        this.setState({
-            currentTime: currentTime
-        });
+    setCurrentTime = (currentTime) => {
+        this.setState({ currentTime: currentTime });
     }
 
-    /**
-     * All of the controller actions will be set in their own file
-     * particularly a PlayerController class (for onPlay, onNext, onBack, etc...)
-     */
+    // Set the isLoading state
+	setLoading = (loading) => {
+		this.setState({ isLoading: loading });
+	}
 
-     /*
-    // Play the current chapter. Uses from FullPlayer:
-    // 1. onPlay() -> onForward() -> setChapterIndex
-    playCurrentChapter = () => {
-        // This has a lot of intricate shit for playing a chapter
+	// Set the isChanging state for the current controller
+	setChanging = (changing) => {
+		this.setState({ isChanging: changing });
     }
-
-    // Pause the currently playing song. Uses from FullPlayer:
-    // 1. onPause() -> setPaused(true)
-    pauseCurrentChapter = () => {
-
+    
+	// Set audio book object
+	setAudioBook = (audioBook) => {
+		this.setState({ audioBook: audioBook });
+		console.log("Set AudioBook:");
+		console.log(this.state.audioBook);
+		console.log("\n");
     }
-
-    // Play the next chapter. Uses:
-    // 1. onForward() -> chapter state.currentlyPlaying 
-    //      -> playCurrentChapter(chapterIndex++)
-    playNextChapter = () => {
-
+    
+    // Set chapter list of Chapter objs
+	setChapterList = (chapterList) => {
+		this.setState({ chapterList: chapterList });
+		console.log("Set ChapterList:");
+		console.log(this.state.chapterList);
+		console.log("\n");
     }
+    
+    // Set the rate of the full player component
+	setRate = (rate) => {
+		this.setState({ rate: rate });
+	}
 
-    // Play the previous chapter:
-    // 1. onPrevious() -> chapter state.currentlyPlaying 
-    //      -> playCurrentChapter(chapterIndex--)
-    playPreviousChapter = () => {
+	// Set the current position of the chapter (used in FullPlayer)
+	setCurrentPosition = (currentTime) => {
+		this.setState({currentPosition: currentTime});
+	}
 
-    }
-
-    // Update the play time for the current chpater
-    // 1. setTime()/setDuration()/onSeek() -> setCurrentTime
-    updatePlayTime = (currentTime: number) => {
-
-    }
-    */
+	// Set the chapter duration for the current chapter
+	setChapterDuration = (duration) => {
+		this.setState({ chapterDuration: duration });
+	}
 }
