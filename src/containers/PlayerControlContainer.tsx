@@ -3,8 +3,6 @@ import { Book, initializeBook } from '../interfaces/models/Book';
 import { Chapter } from 'src/interfaces/models/Chapter';
 
 // Player control states for interacting with player
-    // book: Book,
-	// isChanging: boolean,
 interface PlayerControlState {
 	audioBook: Book,
 	chapterList: Chapter[], 
@@ -17,6 +15,7 @@ interface PlayerControlState {
 	chapterDuration: number,
     chapterIndex: number,
     isLoading: boolean,
+	isChanging: boolean,
 }
 
 /**
@@ -25,68 +24,34 @@ interface PlayerControlState {
  */
 export default class PlayerControlContainer extends Container<PlayerControlState> {
     state: PlayerControlState = {
-        book: initializeBook(),
-        chapterMap: new Map<number, Chapter[]>(),
-        chapterIndex: 0,
-        paused: true,
-        ended: false,
-        currentTime: 0.0,
-        isLoading: true,
-		isChanging: false,
 		audioBook: initializeBook(),
 		chapterList: [], 
 		rate: 1, 
+        paused: true,
+        ended: false,
+        totalLength: 0.0, 
+        currentTime: 0.0,
 		currentPosition: 0,
-		chapterDuration: 0.0
+		chapterDuration: 0.0,
+        chapterIndex: 0,
+        isLoading: true,
+        isChanging: false
     }
 
-    // TODO: See the FullPlayer.tsx file for actions and state 
+    /**
+     * Player control methods for playing and interactions
+     */ 
     
     // Found chapters to the selected book (when user selects book from library)
     // This should issue a query to the database for the Chapter list using ISBN
-	foundChapters = (newLoading: boolean, newBook: Book, newChapterList: Chapter[]) => {
-		// const chapterMap = {...this.state.chapterMap};
-        // chapterMap.set(audioBook.ISBN, chapterList);
-        // this.state.chapterMap[audioBook.ISBN] = chapterList;
-        // let chapterMap = new Map<number, Chapter[]>();
-        const newChapterMap = new Map<number, Chapter[]>(this.state.chapterMap);
-        // chapterMap.set(audioBook.ISBN, chapterList);
-        newChapterMap[newBook.ISBN] = newChapterList;
+	foundChapters = (newBook: Book, newChapterList: Chapter[]) => {
 
-        // let oldBook = {...}
-
-        console.log("Chapter Map:");
-        console.log(newChapterMap);
-        console.log("\n");
-        
-        // audioBook: audioBook
-        // const audioBook
-        //const dbBook = {...this.state.audioBook, ...newBook};
-
-        /*
-        this.setState(prevState => ({
-            audioBook: {
-                ...prevState.audioBook,
-                ISBN: newBook.ISBN
-            }
-        }));
-        */
-    //    delete this.state.audioBook;
-    console.log("PlayerControlContainer: setState()!");
-    this.setState({
-           isLoading: newLoading, 
-           audioBook: newBook, 
-           chapterList: newChapterList,
-           chapterMap: newChapterMap
-       });
-       /*
-       () => {
-           console.log("Updated State:");
-           console.log(this.state);
-           console.log("\n");
-           return {...this.state };
-       });
-       */
+        // Set the state for all full player components
+        this.setState({
+            isLoading: false, 
+            audioBook: newBook, 
+            chapterList: newChapterList,
+        });
 	}
 
     // Play book is updated from the last book. Sets:
@@ -97,8 +62,8 @@ export default class PlayerControlContainer extends Container<PlayerControlState
         // Set the state for the current Book 
         // setting paused to true => play chapter will set to true
         this.setState({
-            book: book,
-            paused: true,
+            audioBook: book,
+            paused: false,
             currentTime: 0.0
         })
     }
@@ -119,7 +84,11 @@ export default class PlayerControlContainer extends Container<PlayerControlState
         })
     }
 
-    // Set the book ended boolean when we finish audio
+    /**
+     * Set states for global Unstated subscribers 
+     */ 
+    
+     // Set the book ended boolean when we finish audio
     setBookEnded = (ended) => {
         this.setState({ ended: ended });
     }

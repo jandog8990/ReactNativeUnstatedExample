@@ -39,26 +39,18 @@ export default class PlayerController extends Component<PlayerControllerProps, a
     }
 
     // Play the current chapter (received from play, next, back, etc)
-    playCurrentChapter = () => {
-		const { book, chapterMap, chapterIndex } = this.props.playerControlContainer.state;
-		const ISBN = book.ISBN;
+	playCurrentChapter = () => {
+		const { chapterList, chapterIndex } = this.props.playerControlContainer.state;
 
 		// Implement MusicControl method calls for playing a book
 		let chapter = initializeChapter();
 
-		// Check that we have a book loaded and the song index is real
-		if (book != null && chapterIndex >= 0) {
-			// first check that the chapter map exists and is not null
-			if (chapterMap.get(ISBN)) {
-				const chapters = chapterMap.get(book.ISBN);
-				// check that value is an array and is not empty
-				if (Array.isArray(chapters) && chapters.length) {
-					chapter = chapters[chapterIndex];	// get the current chapter
-				}
-			}
+		// check that value is an array and is not empty
+		if (Array.isArray(chapterList) && chapterList.length) {
+			chapter = chapterList[chapterIndex];	// get the current chapter
 		}
 
-		console.log("PLay Current Chapter:");
+		console.log("Play Current Chapter:");
 		console.log(chapter);
 		console.log("\n");
 
@@ -78,17 +70,16 @@ export default class PlayerController extends Component<PlayerControllerProps, a
     // Play the next chapter in the chapters lis                                                                                                                                                                                                          fff                                                         cxt
     playNextChapter = () => {
 		// Get the state from the player control container
-		const { book, chapterMap, chapterIndex } = this.props.playerControlContainer.state;
-		const chapters = chapterMap[book.ISBN];
+		const { chapterList, chapterIndex } = this.props.playerControlContainer.state;
 
 		// First let the user know the chapter is changing
 		this.props.playerControlContainer.setChanging(true);
 
-		// Does this implement MusicControl
+		// TODO: Does this implement MusicControl??
 
 		// Update the states using local methods
 		this.props.playerControlContainer.playingQueuedChapter(false, 0);
-		this.props.playerControlContainer.setCurrentChapter((chapterIndex+1) % (chapters.length));
+		this.props.playerControlContainer.setCurrentChapter((chapterIndex+1) % (chapterList.length));
 		this.playCurrentChapter();
     }
 
@@ -124,18 +115,4 @@ export default class PlayerController extends Component<PlayerControllerProps, a
 		// Set the currentTime state in the container
 		this.props.playerControlContainer.setCurrentTime(currentTime);
 	}
-
-	/*
-	render() {
-		const { state: { isLoading, chapterList, rate, 
-			currentPosition, chapterDuration, paused, chapterIndex } } = this.props.playerControlContainer;
-
-		console.log("Player Controller Re-Render:");
-		console.log("ChapterList:");
-		console.log(chapterList);
-		console.log("\n");
-
-		return (<View></View>);
-	}
-	*/
 }

@@ -133,8 +133,8 @@ export default class FullPlayer extends PlayerController {
 			});
 			*/
 
-			// this.playerStore.foundChapters(false, audioBook, chapterList);
-			await this.props.playerControlContainer.foundChapters(false, audioBook, chapterList);
+			// Audiobook needs to be filtered out into Book and Chapter[]
+			await this.props.playerControlContainer.foundChapters(audioBook, chapterList);
 			console.log("returned:");
 			// this.setState({rerender: true});
 		} catch(err) {
