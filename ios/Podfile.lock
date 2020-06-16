@@ -183,7 +183,7 @@ PODS:
     - React-cxxreact (= 0.61.2)
     - React-jsi (= 0.61.2)
   - React-jsinspector (0.61.2)
-  - react-native-music-control (0.10.8):
+  - react-native-music-control (0.11.0):
     - React
   - react-native-safe-area-context (0.6.4):
     - React
@@ -229,13 +229,13 @@ PODS:
     - React-cxxreact (= 0.61.2)
     - React-jsi (= 0.61.2)
     - ReactCommon/jscallinvoker (= 0.61.2)
-  - RNCMaskedView (0.1.6):
+  - RNCMaskedView (0.1.10):
     - React
-  - RNGestureHandler (1.6.0):
+  - RNGestureHandler (1.6.1):
     - React
-  - RNReanimated (1.7.0):
+  - RNReanimated (1.9.0):
     - React
-  - RNScreens (2.0.0-beta.8):
+  - RNScreens (2.8.0):
     - React
   - RNVectorIcons (6.6.0):
     - React
@@ -371,9 +371,9 @@ SPEC CHECKSUMS:
   React-jsi: 32285a21b1b24c36060493ed3057a34677d58d09
   React-jsiexecutor: 8909917ff7d8f21a57e443a866fd8d4560e50c65
   React-jsinspector: 111d7d342b07a904c400592e02a2b958f1098b60
-  react-native-music-control: dcfe5b61e56a15898c4618579cb8ce612c9d21a8
-  react-native-safe-area-context: 52342d2d80ea8faadd0ffa76d83b6051f20c5329
-  react-native-video: d01ed7ff1e38fa7dcc6c15c94cf505e661b7bfd0
+  react-native-music-control: e6ef45ab35dc42510fc1a632ad1c078047304b9f
+  react-native-safe-area-context: 042dfc9d4db17196841df962ba9497f6e7a5bd02
+  react-native-video: 961749da457e73bf0b5565edfbaffc25abfb8974
   React-RCTActionSheet: 89b037c0fb7d2671607cb645760164e7e0c013f6
   React-RCTAnimation: e3cefa93c38c004c318f7ec04b883eb14b8b8235
   React-RCTBlob: d26ac0e313fbf14e7203473fd593ccaaeee8329e
@@ -384,10 +384,10 @@ SPEC CHECKSUMS:
   React-RCTText: e3ef6191cdb627855ff7fe8fa0c1e14094967fb8
   React-RCTVibration: fb54c732fd20405a76598e431aa2f8c2bf527de9
   ReactCommon: 5848032ed2f274fcb40f6b9ec24067787c42d479
-  RNCMaskedView: a88953beefbd347a29072d9eba90e42945fe291e
-  RNGestureHandler: dde546180bf24af0b5f737c8ad04b6f3fa51609a
-  RNReanimated: 031fe8d9ea93c2bd689a40f05320ef9d96f74d7f
-  RNScreens: d56b2da8367a56bbc9840e16d968339eb0ec7e7f
+  RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
+  RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
+  RNReanimated: b5ccb50650ba06f6e749c7c329a1bc3ae0c88b43
+  RNScreens: 62211832af51e0aebcf6e8c36bcf7dd65592f244
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   SPTPersistentCache: df36ea46762d7cf026502bbb86a8b79d0080dff4
   Yoga: 14927e37bd25376d216b150ab2a561773d57911f

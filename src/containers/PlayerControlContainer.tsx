@@ -3,6 +3,7 @@ import { Book, initializeBook } from '../interfaces/models/Book';
 import { Chapter } from 'src/interfaces/models/Chapter';
 
 // Player control states for interacting with player
+// TODO: CurrentTime may not be used in the player
 interface PlayerControlState {
 	audioBook: Book,
 	chapterList: Chapter[], 

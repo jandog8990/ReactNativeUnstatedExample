@@ -182,7 +182,6 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
 	implementation "androidx.appcompat:appcompat:1.0.0"
-	implementation project(':react-native-music-control')
 
 	if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";

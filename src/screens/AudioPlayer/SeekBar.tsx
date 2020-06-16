@@ -31,7 +31,8 @@ const minutesAndSeconds = (position) => ([
  * SeekBar for the main full player allows fwd and rwd of audio
  * @param 
  */
-const SeekBar = ({
+// onValueChange={() => console.log("Value changed!")}
+ const SeekBar = ({
   chapterDuration,
   currentPosition,
   onSeek,
@@ -54,7 +55,6 @@ const SeekBar = ({
         maximumValue={Math.max(chapterDuration, 1, currentPosition + 1)}
         onSlidingStart={onSlidingStart}
         onSlidingComplete={onSeek}
-        onValueChange={() => console.log("Value changed!")}
         value={currentPosition}
         style={styles.slider}
         minimumTrackTintColor='purple'

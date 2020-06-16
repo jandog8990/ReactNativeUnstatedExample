@@ -51,13 +51,11 @@ export default class FullPlayer extends PlayerController {
 		this.TITLE = ChapterInfo.TITLE;
 
 		// Create bindings for the functions used in player
-		/*	
 		this.setCurrentTime = this.setCurrentTime.bind(this);
 		this.setDuration = this.setDuration.bind(this);
 		this.onSeek = this.onSeek.bind(this); 
 		this.onBack = this.onBack.bind(this); 
 		this.onForward = this.onForward.bind(this); 
-		*/
 
 		// TODO May want to remove this
 		this.state = {
@@ -71,6 +69,13 @@ export default class FullPlayer extends PlayerController {
 	// Component mounted => query the database for the audiobook
 	// TODO: The url and book info should be retrieved from the navigation props from previous page
 	componentDidMount() {
+
+		// Initialize the MusicControl service (embedded player)
+		this.initializeMusicControl();
+
+		// Initialize the action controls
+		this.initializeActionControl();
+
 		// Build the URL based on the ISBN, SEARCH_ID and ORDER_ID from the Book object
 		this.fetchJSONAsync(this.audioUrl);
 	}
@@ -168,7 +173,7 @@ export default class FullPlayer extends PlayerController {
 
 	// On seek method for ffw and rwd
 	onSeek = (time) => {
-		time = Math.floor(time);
+		time = Math.round(time);
 
 		// this.audioPlayer && this.audioPlayer.seek(time);
 		this.audioPlayer.seek(time);
@@ -223,6 +228,9 @@ export default class FullPlayer extends PlayerController {
 
 		// this.setState({currentPosition: Math.floor(data.currentTime)});
 		this.props.playerControlContainer.setCurrentPosition(Math.floor(data.currentTime));
+
+		// Update the play time for the MusicControl
+		this.updatePlayTime(data.currentTime);
 	}
 		
 	/*
@@ -232,6 +240,8 @@ export default class FullPlayer extends PlayerController {
 	*/
 
   	render() {
+
+		console.log("Render FULL PLAYER!");
 
 		return (
 		<Subscribe to={[PlayerControlContainer]}>
