@@ -87,19 +87,42 @@ export default class FullPlayer extends PlayerController {
 
 	// Load the chpater info using the specified ChapterInfo enum and chapter list crap
 	loadChapter = (chapterInfo: ChapterInfo, chapterList: Chapter[], chapterIndex: number) => {
+		var chapterNames = ["Afro-Boricua: Nuyarican de Pura Cepa", "This Body Keeps the Keys", "I Walk into Every Room & Yell Where the Mexicans At", 
+			"Children and Youth's Perspectives of the Other Side: Ideas of Inequality and Sense of Belonging", 
+			"Entitled to Nothing: The Struggle for Immigrant Health Care in the Age of Welfare Reform",
+			"The Right to Have Rights", "Darkness Unleashed", "The Destruction of the African Past",
+			"Trapped Like Rats", "Whose Broad Stripes and Bright Stars?",
+			"Hanging of the Mexican Woman", "Decolonization and the Pan-African Nation",
+			"Tafari: Orphaned Prince Steeled by Adversity"];	
+		var imageNames = ["https://storage.googleapis.com/abantuaudio-bucket/Books/Women%20Warriors/Images/WomenWarriorsCover.jpg", "https://storage.googleapis.com/abantuaudio-bucket/Books/Black%20Girl%20Magic/Images/BlackGirlMagicCover.jpg", "https://storage.googleapis.com/abantuaudio-bucket/Books/CitizenIllegal/Images/CitizenIllegal.jpg", 
+			"https://storage.googleapis.com/abantuaudio-bucket/Books/Motherhood%20Across%20Borders/Images/MotherhoodAcrossBordersCover.jpeg", 
+			"https://storage.googleapis.com/abantuaudio-bucket/Books/Girlhood%20in%20the%20Borderlands/Images/GirlhoodBorderlandsCover.jpeg",
+			"https://storage.googleapis.com/abantuaudio-bucket/Books/Chiapas%20Rebellion/Images/ChiapasRebellionCover.jpeg",
+			"https://storage.googleapis.com/abantuaudio-bucket/Books/A%20Cry%20to%20War/Images/CryToWarCover.jpeg",
+			"https://storage.googleapis.com/abantuaudio-bucket/Books/Black%20Marxism/Images/BlackMarxismCover.jpeg",
+			"https://storage.googleapis.com/abantuaudio-bucket/Books/People%20Wasnt%20Made%20to%20Burn/Images/PeopleWasntMadeToBurnCover.jpeg",
+			"https://storage.googleapis.com/abantuaudio-bucket/Books/Not%20the%20Triumph%20But%20the%20Struggle/Images/TriumphStruggleCover.jpeg",
+			"https://storage.googleapis.com/abantuaudio-bucket/Books/Lynching%20in%20the%20West/Images/LynchingInTheWest.jpeg",
+			"https://storage.googleapis.com/abantuaudio-bucket/Books/Living%20With%20Nkrumahism/Images/NkrumahismCover.jpeg",
+			"https://storage.googleapis.com/abantuaudio-bucket/Books/Emperor%20Haile%20Selassie/Images/EmperorHaileSelassieCover.jpeg"];	
 		let dataString = "";
 		if (this.checkChapterList(chapterList, chapterIndex)) {
 			switch (chapterInfo) {
 				case (this.AUDIO): {
 					dataString = chapterList[chapterIndex].AUDIO_LOC ? chapterList[chapterIndex].AUDIO_LOC : "";
+					console.log("Load chapter info: " + dataString);	
 					break;
 				}
 				case (this.IMAGE): {
-					dataString = chapterList[chapterIndex].PHOTO_LOC ? chapterList[chapterIndex].PHOTO_LOC : "";
+					// dataString = chapterList[chapterIndex].PHOTO_LOC ? chapterList[chapterIndex].PHOTO_LOC : "";
+					dataString = imageNames[1] 
+					console.log("Load chapter image: " + dataString);	
 					break;
 				}
 				case (this.TITLE): {
-					dataString = chapterList[chapterIndex].TITLE ? chapterList[chapterIndex].TITLE : "";
+					// dataString = chapterList[chapterIndex].TITLE ? chapterList[chapterIndex].TITLE : "";
+					dataString = chapterNames[1];	
+					console.log("Load chapter title: " + dataString);	
 					break;
 				}
 			}

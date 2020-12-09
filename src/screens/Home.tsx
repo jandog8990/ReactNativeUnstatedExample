@@ -136,7 +136,8 @@ export default class Home extends Component<HomeProps, HomeState> {
 	console.log("\n");
     return (
 		<TouchableOpacity onPress={() => {
-			this.props.navigation.navigate('FullPlayer', {bookTitle: item.TITLE})}}>
+			this.props.navigation.navigate('FullPlayer', {bookTitle: "Black Girl Magic"})}}>
+			{/* this.props.navigation.navigate('FullPlayer', {bookTitle: item.TITLE})}}> */}
 		<Image key={item.ISBN} style={{width: 120, height: 180, marginRight: 10, marginTop: 12}} source={{uri: item.PHOTO_LOC}}/> 
 		</TouchableOpacity>	
 	)
