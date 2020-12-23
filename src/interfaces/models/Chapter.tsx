@@ -11,3 +11,9 @@ export interface Chapter {
 	PHOTO_LOC: string,
 	DURATION: number
 }
+
+// Initialize the Chapter object
+export let initializeChapter = (): Chapter => {
+	return {ISBN: 0, TITLE: "", CHAPTER: 0, 
+		AUDIO_LOC: "", PHOTO_LOC: "", DURATION: 0};
+}

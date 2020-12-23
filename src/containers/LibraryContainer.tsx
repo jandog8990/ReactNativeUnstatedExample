@@ -2,7 +2,7 @@ import { Container } from 'unstated'
 import { Book } from '../interfaces/models/Book';
 
 interface LibraryState {
-	books: Book[],
+	bookList: Book[],
 	showBooks: boolean
 }
 
@@ -12,15 +12,15 @@ interface LibraryState {
  */
 export default class LibraryContainer extends Container<LibraryState> {
 	state: LibraryState = {
-		books: [],
+		bookList: [],
 		showBooks: false
 	}
 
 	// Add book to the library (select purchased book in the library)
 	addBook = (book: Book) => {
-		const books = [...this.state.books]
-		books.push(book)
-		this.setState({ books });
+		const bookList = [...this.state.bookList]
+		bookList.push(book)
+		this.setState({ bookList });
 	}
 
 	// Show all books in the list (select the Library icon)

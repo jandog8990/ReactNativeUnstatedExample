@@ -16,12 +16,16 @@ import {
   Dimensions,
 } from 'react-native';
 
-export default ChapterDetails = ({
+/**
+ * ChapterDetails element that lists the title of the chapter in FullPlayer
+ * @param 
+ */
+// chapter,
+// duration,
+// photo_loc,
+// audio_loc 
+const ChapterDetails = ({
   title,
-  chapter,
-  duration,
-  photo_loc,
-  audio_loc 
 }) => (
   <View style={styles.container}>
     <View style={styles.detailsWrapper}>
@@ -29,6 +33,8 @@ export default ChapterDetails = ({
     </View>
   </View>
 );
+
+export default ChapterDetails;
 
 const styles = StyleSheet.create({
   container: {

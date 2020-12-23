@@ -129,11 +129,16 @@ export default class Home extends Component<HomeProps, HomeState> {
 
   // Render item function
   _renderItem(item: Book) {
-		//<TouchableOpacity  onPress={() => this.props.navigation.navigate('ShopList')}>
-		//<TouchableOpacity  onPress={() => this.props.navigation.navigate('ChaptersModal')}>
+	//<TouchableOpacity  onPress={() => this.props.navigation.navigate('ShopList')}>
+	//<TouchableOpacity  onPress={() => this.props.navigation.navigate('ChaptersModal')}>	
+	console.log("Render Item:");
+	console.log(item);
+	console.log("\n");
     return (
+		// TODO: This title needs to come from the 	
 		<TouchableOpacity onPress={() => {
-			this.props.navigation.navigate('FullPlayer', {bookTitle: item.TITLE})}}>
+			this.props.navigation.navigate('FullPlayer', {bookTitle: "Black Girl Magic"})}}>
+			{/* this.props.navigation.navigate('FullPlayer', {bookTitle: item.TITLE})}}> */}
 		<Image key={item.ISBN} style={{width: 120, height: 180, marginRight: 10, marginTop: 12}} source={{uri: item.PHOTO_LOC}}/> 
 		</TouchableOpacity>	
 	)

@@ -15,24 +15,31 @@ import {
 
 import Slider from 'react-native-slider';
 
+// Padding for the physical position may need to be updated
 function pad(n, width, z=0) {
   n = n + '';
   return n.length >= width ? n : new Array(width - n.length + 1).join(String(z)) + n;
 }
 
+// TODO This conversion may not be working
 const minutesAndSeconds = (position) => ([
   pad(Math.floor(position / 60), 2),
   pad(position % 60, 2),
 ]);
 
-const SeekBar = ({
-  chapterLength,
+/**
+ * SeekBar for the main full player allows fwd and rwd of audio
+ * @param 
+ */
+// onValueChange={() => console.log("Value changed!")}
+ const SeekBar = ({
+  chapterDuration,
   currentPosition,
   onSeek,
   onSlidingStart,
 }) => {
   const elapsed = minutesAndSeconds(currentPosition);
-  const remaining = minutesAndSeconds(chapterLength - currentPosition);
+  const remaining = minutesAndSeconds(chapterDuration - currentPosition);
   return (
     <View style={styles.container}>
       <View style={{flexDirection: 'row'}}>
@@ -41,14 +48,13 @@ const SeekBar = ({
         </Text>
         <View style={{flex: 1}} />
         <Text style={[styles.text, {width: 40}]}>
-          {chapterLength > 1 && "-" + remaining[0] + ":" + remaining[1]}
+          {chapterDuration > 1 && "-" + remaining[0] + ":" + remaining[1]}
         </Text>
       </View>
       <Slider
-        maximumValue={Math.max(chapterLength, 1, currentPosition + 1)}
+        maximumValue={Math.max(chapterDuration, 1, currentPosition + 1)}
         onSlidingStart={onSlidingStart}
         onSlidingComplete={onSeek}
-        onValueChange={() => console.log("Value changed!")}
         value={currentPosition}
         style={styles.slider}
         minimumTrackTintColor='purple'

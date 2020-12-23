@@ -88,19 +88,21 @@ export class StackNav extends Component<AudioBookProps, any> {
 			),
 			navigationOptions: ({navigation}) => ({
 				headerTitle: () => <LogoTitle/>,
-				gesturesEnabled: false,	
+				gestureEnabled: false,	
 				headerBackTitleVisible: false,	
 				headerLeft: () =>
+						// name={Platform.OS === "ios" ? "ios-person-outline" : "md-contact"}
 					<Icon
 						containerStyle={{paddingLeft:20, paddingTop: 5}}
 						type="ionicon"
-						name={Platform.OS === "ios" ? "ios-contact" : "md-contact"}
+						name={"person-outline"}
 					/>,
 				headerRight: () =>
+						// name={Platform.OS === "ios" ? "ios-search-outline" : "md-search"}
 					<Icon
 						containerStyle={{paddingRight:20, paddingTop: 5}}
 						type="ionicon"
-						name={Platform.OS === "ios" ? "ios-search" : "md-searchs"}
+						name={"search-outline"}
 					/>	
 			}),
 		},
@@ -117,7 +119,7 @@ export class StackNav extends Component<AudioBookProps, any> {
 					//name={Platform.OS === "ios" ? "ios-down-arrow" : "md-down-arrow"}
 				return {
 					title: navigation.getParam('bookTitle', 'Full Player'),
-					gesturesEnabled: false,	
+					gestureEnabled: false,	
 					headerBackTitleVisible: false,	
 					headerTitleStyle: { color: 'black', fontSize: 14, width : Dimensions.get('window').width/1.6, textAlign: 'center'},	
 					headerStyle: { backgroundColor: 'white' },

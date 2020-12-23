@@ -4,10 +4,10 @@
  * the OrderId and other temporary ISBN book info
  */
 export const apiConfig = {
-    "baseUrl": "https://4648d4e0.ngrok.io",
-    "genres": "/android/genres/",
-    "bookPlayer": "/android/books/player/",
-    "purchasedBooks": "/android/purchased-books/",
+    "baseUrl": "https://ceb121ba4930.ngrok.io",
+    "genres": "/react/native/genres/",
+    "bookPlayer": "/react/native/books/player/",
+    "purchasedBooks": "/react/native/purchased-books/",
     "orderId": "5c81be173a162c491abb1cfd",
     "isbn": "967714",
     "titleId": "Outlaw"
